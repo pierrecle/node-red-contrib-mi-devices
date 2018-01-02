@@ -184,7 +184,10 @@
         color: '#64C4CD',
         defaults: {
             gateway: {value:"", type:"xiaomi-configurator"},
-            name: {value: ""}
+            name: {value: ""},
+            brightness: {value: 100},
+            hexRgbColor: {value: "#ffffff"},
+            color: {value:{red: 255, green: 255, blue: 255}}
         },
         inputs: 1,
         outputs: 1,
@@ -192,6 +195,17 @@
         icon: "light-icon.png",
         label: function () {
             return this.name || "set light";
+        },
+        oneditsave: function() {
+            var hexRgbColor = $("#node-input-hexRgbColor").val();
+            var split = hexRgbColor.slice(1).match(/.{1,2}/g).map(function(hexColor) {
+                return parseInt(hexColor, 16);
+            });
+            this.color = {
+                red: split[0],
+                green: split[1],
+                blue: split[2]
+            };
         }
     });
 </script>
@@ -204,6 +218,14 @@
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-brightness"><i class="icon-tag"></i> Brightness</label>
+        <input type="range" id="node-input-brightness" min="0" max="100">
+    </div>
+    <div class="form-row">
+        <label for="node-input-hexRgbColor"><i class="icon-tag"></i> Color</label>
+        <input type="color" id="node-input-hexRgbColor">
     </div>
 </script>
 

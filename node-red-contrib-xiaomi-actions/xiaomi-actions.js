@@ -80,11 +80,15 @@ module.exports = function(RED) {
     function XiaomiActionGatewayLight(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
+        this.color = RED.nodes.getNode(config.color);
+        this.brightness = RED.nodes.getNode(config.brightness);
         var node = this;
 
         node.on('input', function(msg) {
             if(node.gateway && node.gateway.sid && node.gateway.key && node.gateway.lastToken) {
-                var rgb = miDevicesUtils.computeColorValue(msg.brightness, msg.color.red, msg.color.green, msg.color.blue);
+                var color = msg.color || node.color;
+                var brightness = msg.brightness || node.brightness;
+                var rgb = miDevicesUtils.computeColorValue(brightness, color.red, color.green, color.blue);
                 msg.payload = {
                     cmd: "write",
                     data: {
