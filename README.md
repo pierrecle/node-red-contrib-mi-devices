@@ -36,14 +36,20 @@ Note that the Wifi power plug is not configured through the configurator as it i
 
 The Xiaomi configurator screen with ease of use to configure your different devices.
 
-![Xiaomi configurator in node-red](https://raw.githubusercontent.com/pierrecle/node-red-contrib-mi-devices/master/xiaomi-configurator.png)
+![Mi configurator in node-red](mi-configurator.png?raw=true "Mi configurator in node-red")
 
 Tip: use the configurator from the side-panel (hamburger menu, configuration nodes) to manage your devices. Node-red doesn't update underlying edit screens if the configuration panel is opened / closed from the edit node screen. (If you do, you need to first close the edit node screen and reopen it by double-clicking the node you want to edit the properties for.)
 
+### How to use different nodes
 
-Here an example of how to use the different nodes.
+Here an example of how to use the different nodes:
+![Mi devices example in node-red](mi-devices-overview.png?raw=true "Mi devices example in node-red")
 
-![Xiaomi devices example in node-red](/xiaomi-devices-overview.png?raw=true)
+
+### Sample flows
+
+Here are different flow (screenshot of [importable sample-flows.json](sample-flows.json "Different flows using Mi Devices")):
+![Mi devices example in node-red](mi-devices-sample.png?raw=true "Mi devices flow sample")
 
 ## Enable LAN mode
 
@@ -56,15 +62,15 @@ Mainland China and language can set on English.
 4. Then the 3 dots at the top right of the screen
 5. Then click on about
 6. Tap under Tutorial menu (on the blank part) repeatedly
-7. You should see now 3 extra options listed in Chinese until you did now enable the developer mode. [ if not try all steps again!]
+7. You should see now 3 extra options listed in Chinese until you did now enable the developer mode (like the first screenshot below, if not try all steps again!)
 8. Choose the second new option
-9. Then tap the first toggle switch to enable LAN functions. Note down the password (`A4D81977ED8A4177` in the screenshot).
-10. Make sure you hit the OK button (to the right of the cancel button) to save your changes.
+9. Then tap the first toggle switch to enable LAN functions. Note down the password (`A4D81977ED8A4177` in the second screenshot)
+10. Make sure you hit the OK button (to the right of the cancel button) to save your changes
 
 If you change here something, you lose your password!
 
-![Gateway advanced mode](/xiaomi-gateway-advanced-mode.png?raw=true "Gateway advanced mode")
-![Gateway LAN mode enabled](/xiaomi-gateway-lan-enabled.png?raw=true "Gateway LAN mode enabled")
+![Gateway advanced mode](xiaomi-gateway-advanced-mode.png?raw=true "Gateway advanced mode")
+![Gateway LAN mode enabled](xiaomi-gateway-lan-enabled.png?raw=true "Gateway LAN mode enabled")
 
 ## Roadmap
 
