@@ -76,6 +76,8 @@ If you change here something, you lose your password!
 
 - [ ] Integrate Yeelight
 - [ ] Handle Xiaomi Cube
+- [ ] Add device SID in output
+- [ ] Code cleanup
 
 ## Sources
 
