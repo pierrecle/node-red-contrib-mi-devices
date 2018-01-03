@@ -111,7 +111,13 @@ module.exports = (RED) => {
         this.gateway = RED.nodes.getNode(config.gateway);
 
         this.on('input', (msg) => {
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "on", sid: msg.sid});
+            if(msg.sid){
+                miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "on", sid: msg.sid});
+            }
+            else {
+                msg.payload = "off";
+                this.send(msg);
+            }
         });
     }
     RED.nodes.registerType("xiaomi-actions on", XiaomiActionPowerOn);
@@ -124,7 +130,13 @@ module.exports = (RED) => {
         this.gateway = RED.nodes.getNode(config.gateway);
 
         this.on('input', (msg) => {
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "off", sid: msg.sid});
+            if(msg.sid){
+                miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "off", sid: msg.sid});
+            }
+            else {
+                msg.payload = "off";
+                this.send(msg);
+            }
         });
     }
     RED.nodes.registerType("xiaomi-actions off", XiaomiActionPowerOff);

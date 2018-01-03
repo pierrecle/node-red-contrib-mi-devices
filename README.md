@@ -42,13 +42,13 @@ Tip: use the configurator from the side-panel (hamburger menu, configuration nod
 
 ### How to use different nodes
 
-Here an example of how to use the different nodes:
+Here an example of how to use the different nodes (screenshot of [importable flows-overview.json](flows-overview.json "Mi Devices overview")):
 ![Mi devices example in node-red](resources/mi-devices-overview.png?raw=true "Mi devices example in node-red")
 
 
 ### Sample flows
 
-Here are different flow (screenshot of [importable sample-flows.json](sample-flows.json "Different flows using Mi Devices")):
+Here are different flow (screenshot of [importable flows-sample.json](flows-sample.json "Different flows using Mi Devices")):
 ![Mi devices example in node-red](resources/mi-devices-sample.png?raw=true "Mi devices flow sample")
 
 ## Enable LAN mode
@@ -79,7 +79,7 @@ If you change here something, you lose your password!
 - [ ] Add filter on "all" node
 - [ ] Set action status when no token available
 - [ ] Add gateway status
-- [ ] Update icons
+- [X] Update icons
 - [X] Refactor socket and add on/off actions
 - [X] Add device SID in output
 - [X] Remove different output styles
@@ -92,3 +92,13 @@ If you change here something, you lose your password!
 * [louisZl Gateway Local API](https://github.com/louisZL/lumi-gateway-local-api)
 * [Domoticz Gateway Code](https://github.com/domoticz/domoticz/blob/development/hardware/XiaomiGateway.cpp)
 * [Node-red UDP nodes](https://github.com/node-red/node-red/blob/master/nodes/core/io/32-udp.js)
+
+## Credits
+
+* [Switch icons by Setyo Ari Wibowo](https://thenounproject.com/seochan.art/)
+* ["All" icon by Fatahillah](https://thenounproject.com/fatahillah/)
+* [Bulb icon by Mello](https://thenounproject.com/stonuiiuntk/)
+* [Glasses icon by Agrahara](https://thenounproject.com/agrahara4/)
+* [Volume icons by krishna](https://thenounproject.com/krishanayuga/)
+* [List icon by Landan Lloyd](https://thenounproject.com/landan/)
+* [Clicks icons by Adrien Coquet](https://thenounproject.com/coquet_adrien/)

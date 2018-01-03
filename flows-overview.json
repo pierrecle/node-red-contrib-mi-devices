@@ -1,0 +1,475 @@
+[
+    {
+        "id": "a27cc591.60157",
+        "type": "tab",
+        "label": "Flow 1"
+    },
+    {
+        "id": "98fadf6b.93ace8",
+        "type": "xiaomi-gateway in",
+        "z": "a27cc591.60157",
+        "name": "",
+        "gateway": "",
+        "ip": "",
+        "x": 100,
+        "y": 260,
+        "wires": [
+            [
+                "81afc500.7aaa3",
+                "cb33991f.f28cf",
+                "c99b4545.b1c2a",
+                "64dca666.0bfbd",
+                "89e83211.c691b",
+                "76067c35.ffa28c"
+            ]
+        ]
+    },
+    {
+        "id": "81afc500.7aaa3",
+        "type": "xiaomi-ht",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "x": 420,
+        "y": 120,
+        "wires": [
+            [
+                "b9a37252.56508"
+            ]
+        ]
+    },
+    {
+        "id": "cb33991f.f28cf",
+        "type": "xiaomi-magnet",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "x": 440,
+        "y": 180,
+        "wires": [
+            [
+                "b9a37252.56508"
+            ]
+        ]
+    },
+    {
+        "id": "c99b4545.b1c2a",
+        "type": "xiaomi-motion",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "motionmsg": "",
+        "nomotionmsg": "",
+        "output": "0",
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "b9a37252.56508"
+            ]
+        ]
+    },
+    {
+        "id": "64dca666.0bfbd",
+        "type": "xiaomi-switch",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "outmsg": "{{click}}",
+        "outmsgdbcl": "{{double_click}}",
+        "output": "0",
+        "x": 440,
+        "y": 300,
+        "wires": [
+            [
+                "b9a37252.56508"
+            ]
+        ]
+    },
+    {
+        "id": "89e83211.c691b",
+        "type": "xiaomi-gateway",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "x": 440,
+        "y": 360,
+        "wires": [
+            [
+                "b9a37252.56508"
+            ]
+        ]
+    },
+    {
+        "id": "76067c35.ffa28c",
+        "type": "xiaomi-plug",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "onmsg": "",
+        "offmsg": "",
+        "output": "0",
+        "x": 430,
+        "y": 420,
+        "wires": [
+            [
+                "b9a37252.56508"
+            ]
+        ]
+    },
+    {
+        "id": "b9a37252.56508",
+        "type": "debug",
+        "z": "a27cc591.60157",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 790,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "67b347e2.6a534",
+        "type": "xiaomi-ht",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "x": 480,
+        "y": 580,
+        "wires": [
+            [
+                "80913b13.6abde8"
+            ]
+        ]
+    },
+    {
+        "id": "4d7101c0.34b03",
+        "type": "xiaomi-magnet",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "x": 500,
+        "y": 640,
+        "wires": [
+            [
+                "80913b13.6abde8"
+            ]
+        ]
+    },
+    {
+        "id": "d693568c.d4361",
+        "type": "xiaomi-motion",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "motionmsg": "",
+        "nomotionmsg": "",
+        "output": "0",
+        "x": 500,
+        "y": 700,
+        "wires": [
+            [
+                "80913b13.6abde8"
+            ]
+        ]
+    },
+    {
+        "id": "698abb61.5abd4c",
+        "type": "xiaomi-switch",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "outmsg": "{{click}}",
+        "outmsgdbcl": "{{double_click}}",
+        "output": "0",
+        "x": 500,
+        "y": 760,
+        "wires": [
+            [
+                "80913b13.6abde8",
+                "478d086b.03d228",
+                "15e41dc2.040d2a"
+            ]
+        ]
+    },
+    {
+        "id": "7d859dfb.4b9654",
+        "type": "xiaomi-gateway",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "x": 500,
+        "y": 820,
+        "wires": [
+            [
+                "80913b13.6abde8",
+                "70587543.82d5e4",
+                "575fa4d4.fc33a4",
+                "ebe3b7c3.e992a",
+                "1d0a8872.4d0768"
+            ]
+        ]
+    },
+    {
+        "id": "a5e8199.79366e8",
+        "type": "inject",
+        "z": "a27cc591.60157",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 700,
+        "wires": [
+            [
+                "67b347e2.6a534",
+                "4d7101c0.34b03",
+                "d693568c.d4361",
+                "698abb61.5abd4c",
+                "7d859dfb.4b9654",
+                "14721d5a.c43ffb",
+                "c537654a.b43598",
+                "2c89de3d.6e4982",
+                "e4012d10.dc47b8"
+            ]
+        ]
+    },
+    {
+        "id": "14721d5a.c43ffb",
+        "type": "xiaomi-plug",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "onmsg": "",
+        "offmsg": "",
+        "output": "0",
+        "x": 490,
+        "y": 880,
+        "wires": [
+            [
+                "80913b13.6abde8",
+                "66151627.9213d8",
+                "373c3dc7.ca5912"
+            ]
+        ]
+    },
+    {
+        "id": "c537654a.b43598",
+        "type": "xiaomi-plug-wifi",
+        "z": "a27cc591.60157",
+        "name": "",
+        "ip": "",
+        "onmsg": "",
+        "offmsg": "",
+        "output": "0",
+        "x": 500,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "80913b13.6abde8",
+        "type": "xiaomi-actions read",
+        "z": "a27cc591.60157",
+        "name": "",
+        "x": 810,
+        "y": 580,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "70587543.82d5e4",
+        "type": "xiaomi-actions get_id_list",
+        "z": "a27cc591.60157",
+        "name": "",
+        "x": 820,
+        "y": 800,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "575fa4d4.fc33a4",
+        "type": "xiaomi-actions gateway_light",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "brightness": 100,
+        "hexRgbColor": "#ffffff",
+        "color": {
+            "red": 255,
+            "green": 255,
+            "blue": 255
+        },
+        "x": 820,
+        "y": 840,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "ebe3b7c3.e992a",
+        "type": "xiaomi-actions gateway_sound",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "mid": "",
+        "volume": "",
+        "x": 830,
+        "y": 880,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "1d0a8872.4d0768",
+        "type": "xiaomi-actions gateway_stop_sound",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "x": 830,
+        "y": 920,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "66151627.9213d8",
+        "type": "xiaomi-actions on",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "x": 820,
+        "y": 980,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "373c3dc7.ca5912",
+        "type": "xiaomi-actions off",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "x": 820,
+        "y": 1020,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "478d086b.03d228",
+        "type": "xiaomi-actions click",
+        "z": "a27cc591.60157",
+        "name": "",
+        "x": 810,
+        "y": 680,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "15e41dc2.040d2a",
+        "type": "xiaomi-actions double_click",
+        "z": "a27cc591.60157",
+        "name": "",
+        "x": 830,
+        "y": 720,
+        "wires": [
+            [
+                "70314d8a.34e17c"
+            ]
+        ]
+    },
+    {
+        "id": "70314d8a.34e17c",
+        "type": "xiaomi-gateway out",
+        "z": "a27cc591.60157",
+        "name": "",
+        "gateway": "",
+        "ip": "",
+        "x": 1200,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "2c89de3d.6e4982",
+        "type": "xiaomi-actions on",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "x": 280,
+        "y": 920,
+        "wires": [
+            [
+                "c537654a.b43598"
+            ]
+        ]
+    },
+    {
+        "id": "e4012d10.dc47b8",
+        "type": "xiaomi-actions off",
+        "z": "a27cc591.60157",
+        "gateway": "",
+        "name": "",
+        "x": 280,
+        "y": 960,
+        "wires": [
+            [
+                "c537654a.b43598"
+            ]
+        ]
+    },
+    {
+        "id": "f475f762.1c84a",
+        "type": "comment",
+        "z": "a27cc591.60157",
+        "name": "Filter incoming",
+        "info": "",
+        "x": 420,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "1692dd61.5f4893",
+        "type": "comment",
+        "z": "a27cc591.60157",
+        "name": "Outgoing",
+        "info": "",
+        "x": 420,
+        "y": 500,
+        "wires": []
+    }
+]
