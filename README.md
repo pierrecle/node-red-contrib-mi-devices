@@ -76,8 +76,14 @@ If you change here something, you lose your password!
 
 - [ ] Integrate Yeelight
 - [ ] Handle Xiaomi Cube
-- [ ] Add device SID in output
-- [ ] Code cleanup
+- [ ] Add filter on "all" node
+- [ ] Set action status when no token available
+- [ ] Add gateway status
+- [ ] Update icons
+- [ ] Refactor socket and set on/off actions
+- [X] Add device SID in output
+- [X] Remove different output styles
+- [X] Code cleanup
 
 ## Sources
 

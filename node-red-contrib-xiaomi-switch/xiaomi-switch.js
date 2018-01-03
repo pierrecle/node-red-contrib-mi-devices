@@ -1,71 +1,8 @@
-module.exports = function(RED) {
-    "use strict";
-    var mustache = require("mustache");
-    var miDevicesUtils = require('../utils');
+const miDevicesUtils = require('../src/utils');
 
+module.exports = (RED) => {
     function XiaomiSwitchNode(config) {
-        RED.nodes.createNode(this, config);
-        this.gateway = RED.nodes.getNode(config.gateway);
-        this.sid = config.sid;
-        this.output = config.output;
-        this.outmsg = config.outmsg;
-        this.outmsgdbcl = config.outmsgdbcl;
-
-        var node = this;
-
-        node.status({fill:"grey", shape:"ring", text:"battery - na"});
-
-        if (this.gateway) {
-            node.on('input', function(msg) {
-                // var payload = JSON.parse(msg);
-                var payload = msg.payload;
-
-                // Input from gateway
-                if (payload.sid) {
-                    if (payload.sid == node.sid && ["switch", "sensor_switch.aq2"].indexOf(payload.model) >= 0) {
-                        var data = payload.data;
-                        miDevicesUtils.setStatus(node, data);
-
-                        if (node.output == "0") {
-                            node.send([msg]);
-                        } else if (node.output == "1") {
-                            var status = null;
-
-                            if (data.status) {
-                                status = {"payload": data.status};
-                            }
-                            node.send([status]);
-                        } else if (node.output == "2") {
-                            var status = null;
-
-                            if (data.status && data.status == "click") {
-                                status = {"payload": mustache.render(node.outmsg, data)}
-                                node.send([[status],[]]);
-                            }
-
-                            if (data.status && data.status == "double_click") {
-                                status = {"payload": mustache.render(node.outmsgdbcl, data)}
-                                node.send([[],[status]]);
-                            }
-                        }
-                    }
-                }
-                // Prepare for request
-                else {
-                    miDevicesUtils.prepareForGatewayRequest(node, msg);
-                    node.send(msg);
-                }
-            });
-
-            node.on("close", function() {
-            });
-
-        } else {
-            // no gateway configured
-        }
-
+        miDevicesUtils.defaultNode(RED, config, this);
     }
-
     RED.nodes.registerType("xiaomi-switch", XiaomiSwitchNode);
-
-}
+};

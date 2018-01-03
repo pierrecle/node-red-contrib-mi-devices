@@ -1,8 +1,6 @@
-module.exports = function(RED) {
-    "use strict";
-    var mustache = require("mustache");
-    var crypto = require("crypto");
-    var miio = require("miio");
+const miio = require("miio");
+
+module.exports = (RED) => {
     var connectionState = "timeout";
     var retryTimer;
     var delayedStatusMsgTimer;
@@ -11,23 +9,18 @@ module.exports = function(RED) {
     function XiaomiPlugWifiNode(config) {
         RED.nodes.createNode(this, config);
         this.ip = config.ip;
-        this.output = config.output;
-        this.onmsg = config.onmsg;
-        this.offmsg = config.offmsg;
         this.plug = null;
 
-        var node = this;
+        this.status({fill: "yellow", shape: "dot", text: "connecting"});
 
-        node.status({fill: "yellow", shape: "dot", text: "connecting"});
-
-        miio.device({address: node.ip})
-            .then(function (plug) {
-                node.plug = plug;
-                node.status({fill:"green", shape:"dot", text:"connected"});
+        miio.device({address: this.ip})
+            .then((plug) => {
+                this.plug = plug;
+                this.status({fill:"green", shape:"dot", text:"connected"});
                 connectionState = "connected";
                 delayedStatusMsgUpdate(node);
 
-                node.plug.on('propertyChanged', function(e) {
+                this.plug.on('propertyChanged', (e) => {
                     if (e.property === "power") {
                         if (e.value['0']) {
                             setState("on");
@@ -38,73 +31,58 @@ module.exports = function(RED) {
                 });
                 watchdog();
             })
-            .catch(function (error) {
+            .catch((error) => {
                 connectionState = "reconnecting";
                 watchdog();
             })
 
-        node.on('input', function (msg) {
+        this.on('input', (msg) => {
             var payload = msg.payload;
             if (connectionState === "connected") {
                 if (payload == 'on') {
-                    node.plug.setPower(true);
+                    this.plug.setPower(true);
                 }
 
                 if (payload == 'off') {
-                    node.plug.setPower(false);
+                    this.plug.setPower(false);
                 }
             }
         });
 
-        node.on('close', function (done) {
+        this.on('close', (done) => {
             if (retryTimer) {
                 clearTimeout(retryTimer);
             }
             if (delayedStatusMsgTimer) {
                 clearTimeout(delayedStatusMsgTimer);
             }
-            if (node.plug) {
-                node.plug.destroy();
+            if (this.plug) {
+                this.plug.destroy();
             }
             done();
         });
 
-        var setState = function(state) {
-            if (node.plug) {
-                var status = null;
-                var info = {"payload": {
-                    "id": node.plug.id,
-                    "type": node.plug.type,
-                    "model": node.plug.model,
-                    "capabilities": node.plug.capabilities,
-                    "address": node.plug.address,
-                    "port": node.plug.port,
-                    "power": node.plug.power()
-                }};
-
-                if (state === "on") {
-                    node.status({fill:"green", shape:"dot", text:"on"});
-                    status = {"payload": mustache.render(node.onmsg, info.payload)}
-                }
-                if (state === "off") {
-                    node.status({fill:"red", shape:"dot", text:"off"});
-                    status = {"payload": mustache.render(node.offmsg, info.payload)}
-                }
-
-                if (node.output == 0) {
-                    status = info;
-                } else if (node.output == "1") {
-                    status = {"payload": state}
-                } else if (node.output == "2") {
-                    // do nothing, just send status parsed with mustache
-                }
-                node.send([status]);
+        var setState = (state) => {
+            if (this.plug) {
+                let status = {
+                    payload: {
+                        id: this.plug.id,
+                        type: this.plug.type,
+                        model: this.plug.model,
+                        capabilities: this.plug.capabilities,
+                        address: this.plug.address,
+                        port: this.plug.port,
+                        power: this.plug.power(),
+                        state: state
+                    }
+                };
+                this.send(status);
             }
         };
 
-        var delayedStatusMsgUpdate = function() {
-            delayedStatusMsgTimer = setTimeout(function() {
-                if (node.plug.power()['0']) {
+        var delayedStatusMsgUpdate = () => {
+            delayedStatusMsgTimer = setTimeout(() => {
+                if (this.plug.power()['0']) {
                     setState("on");
                 } else {
                     setState("off");
@@ -112,12 +90,12 @@ module.exports = function(RED) {
             }, 1500);
         };
 
-        var discoverDevice = function() {
-            miio.device({address: node.ip})
-                .then(function (plug) {
-                    if (node.plug == null) {
-                        node.plug = plug;
-                        node.plug.on('propertyChanged', function(e) {
+        var discoverDevice = () => {
+            miio.device({address: this.ip})
+                .then((plug) => {
+                    if (this.plug == null) {
+                        this.plug = plug;
+                        this.plug.on('propertyChanged', (e) => {
                             if (e.property === "power") {
                                 if (e.value['0']) {
                                     setState("on");
@@ -128,28 +106,30 @@ module.exports = function(RED) {
                         });
                     }
                     if (connectionState === "reconnecting") {
-                        node.status({fill:"green", shape:"dot", text:"connected"});
+                        this.status({fill:"green", shape:"dot", text:"connected"});
                         connectionState = "connected";
                         delayedStatusMsgUpdate();
                     }
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     connectionState = "reconnecting";
-                    if (node.plug) {
-                        node.plug.destroy();
-                        node.plug = null;
+                    if (this.plug) {
+                        this.plug.destroy();
+                        this.plug = null;
                     }
                 })
         };
 
-        var watchdog = function() {
-            setTimeout(function retryTimer() {
+        var watchdog = () => {
+            var node = this;
+            function retryTimer() {
                 discoverDevice();
                 if (connectionState === "reconnecting") {
                     node.status({fill: "red", shape: "dot", text: "reconnecting"});
                 }
                 setTimeout(retryTimer, 30000);
-            }, 30000);
+            }
+            setTimeout(retryTimer, 30000);
         }
     }
 

@@ -1,26 +1,19 @@
-module.exports = function(RED) {
-    "use strict";
-    var mustache = require("mustache");
-    var crypto = require("crypto");
+const crypto = require("crypto");
 
+module.exports = (RED) => {
     function XiaomiPlugNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
-        this.output = config.output;
-        this.onmsg = config.onmsg;
-        this.offmsg = config.offmsg;
         this.key = this.gateway.key;
 
-        var node = this;
         var currentToken = "";
         var state = "";
 
-        node.status({fill:"yellow", shape:"ring", text:"waiting for key"});
+        this.status({fill:"yellow", shape:"ring", text:"waiting for key"});
 
         if (this.gateway && this.key != "") {
-            node.on('input', function(msg) {
-                // var payload = JSON.parse(msg);
+            this.on('input', (msg) => {
                 var payload = msg.payload;
 
                 if (payload.cmd == "heartbeat" && payload.model == "gateway") {
@@ -70,37 +63,12 @@ module.exports = function(RED) {
                         state = "off";
                     }
 
-                    if (node.output == "0") {
-                        msg.payload = payload;
-                        node.send([msg]);
-                    } else if (node.output == "1") {
-                        var status = null;
-
-                        if (data.status) {
-                            status = {"payload": data.status};
-                        }
-                        node.send([status]);
-                    } else if (node.output == "2") {
-                        var status = null;
-
-                        if (data.status === 'on') {
-                            status = {"payload": mustache.render(node.onmsg, data)}
-                        } else {
-                            status = {"payload": mustache.render(node.offmsg, data)}
-                        }
-                        node.send([status]);
-                    }
+                    msg.payload = payload;
+                    node.send([msg]);
                 }
             });
-
-            node.on("close", function() {
-            });
-
-        } else {
-            // no gateway configured
-            if (this.key == "") {
-                node.status({fill:"red", shape:"dot", text:"no key configured"});
-            }
+        } else if (this.key == "") {
+            node.status({fill:"red", shape:"dot", text:"no key configured"});
         }
 
     }

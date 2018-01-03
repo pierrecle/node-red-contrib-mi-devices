@@ -16,21 +16,6 @@
         icon: "outlet-wifi-icon.png",
         label: function () {
             return this.name || "xiaomi-plug-wifi";
-        },
-        oneditprepare: function() {
-            var node = this;
-
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
-
-        },
-        oneditsave: function() {
-
         }
     });
 </script>
@@ -43,22 +28,6 @@
     <div class="form-row">
         <label for="node-input-ip"><i class="icon-tag"></i> Ip</label>
         <input type="text" id="node-input-ip" placeholder="ip address">
-    </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-            <option value="2">Template</option>
-        </select>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-onmsg"><i class="fa fa-power-off"></i> On msg</label>
-        <input type="text" id="node-input-onmsg">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-offmsg"><i class="fa fa-power-off"></i> Off msg</label>
-        <input type="text" id="node-input-offmsg">
     </div>
 </script>
 
@@ -77,43 +46,22 @@
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <li>Status output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway, see below.</dd>
+        </dl>
     </ol>
 
-    <h3>Details</h3>
+    <h4>Details</h4>
     <p>On the input you can send the string <code>on</code> to switch the plug on. To turn it off just send the string <code>off</code></p>
-    <p>Output 1 reports the status</p>
-
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
-    </p>
-
-    <h4>Full data</h4>
-    <p>Passes a json object with detailed information about the plug. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the values <code>on</code> or <code>off</code></p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
-
     <p>Sample message full data:</p>
-    <p><pre>
-    {
-        "type": "power-plug",
-        "model": "chuangmi.plug.m1",
-        "capabilities: [ {'0': "power-channels"} ],
-        "address": "192.168.178.31",
-        "port": 54321,
-        "power": { '0': false }
-               }"
-    }</pre></p>
+    <p><pre>{
+  type: "power-plug",
+  model: "chuangmi.plug.m1",
+  capabilities: [ {"0": "power-channels"} ],
+  address: "192.168.178.31",
+  port: 54321,
+  power: { "0": false },
+  state: "on"
+}</pre></p>
 </script>

@@ -5,16 +5,10 @@
         defaults: {
             gateway: {value:"", type:"xiaomi-configurator"},
             name: {value: ""},
-            sid: {value: "", required: true},
-            temperature: {value: "{{temperature}}"},
-            humidity: {value: "{{humidity}}"},
-            pressure: {value: "{{pressure}}"},
-            divide: {value: true},
-            output: {value: "0"}
+            sid: {value: "", required: true}
         },
         inputs: 1,
-        outputs: 3,
-        outputLabels: ["Temperature","Humidity","Pressure"],
+        outputs: 1,
         paletteLabel: "sensor HT",
         icon: "thermometer-icon.png",
         label: function () {
@@ -55,16 +49,7 @@
                 changeGateway("sensor_ht");
             });
 
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
-
             $(".node-input-msg").hide();
-            $("#node-input-output").val(node.output);
         },
         oneditsave: function() {
             var node = this;
@@ -86,31 +71,6 @@
         <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
         <select id="node-input-sid" placeholder="xiaomi gateway"></select>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-            <option value="2">Template</option>
-        </select>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-temperature"><i class="fa fa-thermometer-three-quarters"></i> Temperature</label>
-        <input type="text" id="node-input-temperature">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-humidity"><i class="fa fa-mixcloud"></i> Humidity</label>
-        <input type="text" id="node-input-humidity"/>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-pressure"><i class="fa fa-tachometer"></i> Pressure</label>
-        <input type="text" id="node-input-pressure"/>
-    </div>
-    <div class="form-row node-input-msg">
-        <label>&nbsp;</label>
-        <i></i>&nbsp;&nbsp;<input type="checkbox" id="node-input-divide" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-divide" style="width: 70%;">Divide values by 100</label>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-ht">
@@ -126,59 +86,29 @@
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <li>Temperature output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-        <li>Humidity output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway, see below.</dd>
+        </dl>
     </ol>
 
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>sensor_ht</code> or <code>weather.v1</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
+    <h4>Details</h4>
+    <p>The incoming message is processed if the <code>sid</code> matches the configured value for this device.</p>
+    <p>Sample payload from Aqara (which brings pressure):</p>
+    <p><pre>{
+  cmd: "read_ack"
+  model: "weather.v1"
+  sid: "158d00010b7f1b"
+  short_id: 8451
+  data: {
+    voltage:3005,
+    temperature:23.25,
+    humidity:56.99,
+    pressure:981.26,
+    batteryLevel: 34
+  }
+}</pre>
+    Where <code>humidy</code> is in percents, <code>pressure</code> in hPa, <code>batteryLevel</code> is a computed percentage of remaining battery.
     </p>
-
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the string values for temperature on output 1 and humidity on output 2.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used. As the HT sensor is sending data in thousends, you can check this box to have it in hundreds.
-        Here an template example to send the temperature to homebridge-mqtt:
-        <pre>
-        {
-            "name":"Temperatuur woonkamer",
-            "characteristic":"CurrentTemperature",
-            "value":{{temperature}}
-        }</pre></p>
-
-    <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "read_ack"
-        model: "sensor_ht"
-        sid: "158d00010b7f1b"
-        short_id: 8451
-        data: "{
-                    "voltage":3005,
-                    "temperature":"2325",
-                    "humidity":"5699",
-                    "pressure":"98126"
-               }"
-    }</pre></p>
 
 </script>

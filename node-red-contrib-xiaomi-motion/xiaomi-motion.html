@@ -11,8 +11,7 @@
             output: {value: "0"}
         },
         inputs: 1,
-        outputs: 2,
-        outputLabels: ["Status"],
+        outputs: 1,
         paletteLabel: "motion",
         icon: "motion-icon.png",
         label: function () {
@@ -52,14 +51,6 @@
             $("#node-input-gateway").change(function () {
                 changeGateway("magnet");
             });
-
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
         },
         oneditsave: function() {
             var node = this;
@@ -81,22 +72,6 @@
         <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
         <select id="node-input-sid" placeholder="xiaomi gateway"></select>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-            <option value="2">Template</option>
-        </select>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-motionmsg"><i class="fa fa-rss"></i> Motion msg</label>
-        <input type="text" id="node-input-motionmsg">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-nomotionmsg"><i class="fa fa-circle"></i> No motion msg</label>
-        <input type="text" id="node-input-nomotionmsg">
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-motion">
@@ -112,49 +87,26 @@
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <li>Motion output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-        <li>Duration output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">json</span></dt>
-                <dd>raw data</dd>
-            </dl>
-        </li>
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway, see below.</dd>
+        </dl>
     </ol>
 
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>motion</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported for output 1:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
-    </p>
-
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the values <code>motion</code> or <code>no_motion</code>. In case of <code>no_motion</code> also the duration object is passed on output 2.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
-
+    <h4>Details</h4>
+    <p>The incoming message is processed if the <code>sid</code> matches the configured value for this device.</p>
     <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "read_ack"
-        model: "motion"
-        sid: "158d00015ef56c"
-        short_id: 21672
-        data: "{
-                    "voltage":3035,
-                    "status":"motion"
-               }"
-    }</pre></p>
+    <p><pre>{
+  cmd: "read_ack"
+  model: "motion"
+  sid: "158d00015ef56c"
+  short_id: 21672
+  data: {
+    voltage: 3035,
+    status: "motion",
+    batteryLevel: 45
+  }
+}</pre>
+Where <code>batteryLevel</code> is a computed percentage of remaining battery.
+</p>
 </script>

@@ -11,8 +11,7 @@
             output: {value: "0"}
         },
         inputs: 1,
-        outputs: 2,
-        outputLabels: ["Single-click", "Double-click"],
+        outputs: 1,
         paletteLabel: "switch",
         icon: "light-icon.png",
         label: function () {
@@ -53,14 +52,6 @@
                 changeGateway("switch");
             });
 
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
-
             $(".node-input-msg").hide();
             $("#node-input-output").val(node.output);
         },
@@ -84,22 +75,6 @@
         <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
         <select id="node-input-sid" placeholder="xiaomi gateway"></select>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-            <option value="2">Template</option>
-        </select>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-outmsg"><i class="fa fa-hand-pointer-o"></i> Single-click</label>
-        <input type="text" id="node-input-outmsg">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-outmsgdbcl"><i class="fa fa-hand-peace-o"></i> Double-click</label>
-        <input type="text" id="node-input-outmsgdbcl">
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-switch">
@@ -115,49 +90,24 @@
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <li>Single click output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-        <li>Double click output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway, see below.</dd>
+        </dl>
     </ol>
 
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>switch</code> or <code>sensor_switch.aq2</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
-    </p>
-
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the string values <code>single_click</code> on output 1 and <code>double_click</code> on output 2.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
-
+    <h4>Details</h4>
+    <p>The incoming message is processed if the <code>sid</code> matches the configured value for this device.</p>
     <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "report"
-        model: "switch"
-        sid: "158d000128b124"
-        short_id: 56773
-        data: "{
-                    "status":"click"
-               }"
-    }</pre></p>
+    <p><pre>{
+  cmd: "report"
+  model: "switch"
+  sid: "158d000128b124"
+  short_id: 56773
+  data: {
+    status: "click",
+    batteryLevel: 23
+  }
+}</pre></p>
 
 </script>

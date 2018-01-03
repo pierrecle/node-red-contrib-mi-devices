@@ -1,41 +1,38 @@
-module.exports = function(RED) {
-    "use strict";
-    var dgram = require('dgram');
-    var miDevicesUtils = require('../utils');
+const dgram = require('dgram'); // Given by udp node
+const miDevicesUtils = require('../src/utils');
+
+// UDP node copy/paste...
+
+module.exports = (RED) => {
     var udpInputPortsInUse = {};
 
     function XiaomiGatewayNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
 
-        var node = this;
-
         if (this.gateway) {
-            node.on('input', function(msg) {
+            this.on('input', (msg) => {
                 // var payload = JSON.parse(msg);
                 var payload = msg.payload;
-                node.log("Received message from: " + payload.model + " sid: " + payload.sid + " payload: " + payload.data);
+                //this.log("Received message from: " + payload.model + " sid: " + payload.sid + " payload: " + payload.data);
 
                 // Input from gateway
                 if(payload.sid) {
-                    if (payload.sid == node.gateway.sid && ["gateway"].indexOf(payload.model) >= 0) {
+                    if (payload.sid == this.gateway.sid) {
                         if(payload.data.rgb) {
                             var decomposed = miDevicesUtils.computeColor(payload.data.rgb);
                             payload.data.brightness = decomposed.brightness;
                             payload.data.color = decomposed.color;
                         }
-                        node.send([msg]);
+                        this.send([msg]);
                     }
                 }
                 // Prepare for request
                 else {
-                    msg.gateway = node.gateway;
-                    msg.sid = node.gateway.sid;
-                    node.send(msg);
+                    msg.gateway = this.gateway;
+                    msg.sid = this.gateway.sid;
+                    this.send(msg);
                 }
-            });
-
-            node.on("close", function() {
             });
         }
     }
@@ -50,10 +47,9 @@ module.exports = function(RED) {
         this.iface = null;
         this.addr = n.ip;
         this.ipv = this.ip && this.ip.indexOf(":") >= 0 ? "udp6" : "udp4";
-        var node = this;
 
-        var opts = {type:node.ipv, reuseAddr:true};
-        if (process.version.indexOf("v0.10") === 0) { opts = node.ipv; }
+        var opts = {type:this.ipv, reuseAddr:true};
+        if (process.version.indexOf("v0.10") === 0) { opts = this.ipv; }
         var server;
 
         if (!udpInputPortsInUse.hasOwnProperty(this.port)) {
@@ -61,24 +57,24 @@ module.exports = function(RED) {
             udpInputPortsInUse[this.port] = server;
         }
         else {
-            node.warn(RED._("udp.errors.alreadyused",node.port));
+            this.warn(RED._("udp.errors.alreadyused",this.port));
             server = udpInputPortsInUse[this.port];  // re-use existing
         }
 
-        if (process.version.indexOf("v0.10") === 0) { opts = node.ipv; }
+        if (process.version.indexOf("v0.10") === 0) { opts = this.ipv; }
 
-        server.on("error", function (err) {
-            if ((err.code == "EACCES") && (node.port < 1024)) {
-                node.error(RED._("udp.errors.access-error"));
+        server.on("error", (err) => {
+            if ((err.code == "EACCES") && (this.port < 1024)) {
+                this.error(RED._("udp.errors.access-error"));
             } else {
-                node.error(RED._("udp.errors.error",{error:err.code}));
+                this.error(RED._("udp.errors.error",{error:err.code}));
             }
             server.close();
         });
 
-        server.on('message', function (message, remote) {
+        server.on('message', (message, remote) => {
             var msg;
-            if(remote.address == node.addr) {
+            if(remote.address == this.addr) {
                 var msg = message.toString('utf8');
                 var jsonMsg = JSON.parse(msg);
                 if(jsonMsg.data) {
@@ -88,51 +84,51 @@ module.exports = function(RED) {
                     }
                 }
                 msg = { payload: jsonMsg };
-                if(jsonMsg.token && node.gateway && jsonMsg.data.ip && jsonMsg.data.ip === node.gateway.ip) {
-                    node.gateway.lastToken = jsonMsg.token;
-                    if(!node.gateway.sid) {
-                        node.gateway.sid = jsonMsg.sid;
+                if(jsonMsg.token && this.gateway && jsonMsg.data.ip && jsonMsg.data.ip === this.gateway.ip) {
+                    this.gateway.lastToken = jsonMsg.token;
+                    if(!this.gateway.sid) {
+                        this.gateway.sid = jsonMsg.sid;
                     }
                 }
-                node.send(msg);
+                this.send(msg);
             }
         });
 
-        server.on('listening', function () {
+        server.on('listening', () => {
             var address = server.address();
-            node.log(RED._("udp.status.listener-at",{host:address.address,port:address.port}));
+            this.log(RED._("udp.status.listener-at",{host:address.address,port:address.port}));
             server.setBroadcast(true);
             try {
                 server.setMulticastTTL(128);
-                server.addMembership(node.group,node.iface);
-                node.log(RED._("udp.status.mc-group",{group:node.group}));
+                server.addMembership(this.group,this.iface);
+                this.log(RED._("udp.status.mc-group",{group:this.group}));
             } catch (e) {
                 if (e.errno == "EINVAL") {
-                    node.error(RED._("udp.errors.bad-mcaddress"));
+                    this.error(RED._("udp.errors.bad-mcaddress"));
                 } else if (e.errno == "ENODEV") {
-                    node.error(RED._("udp.errors.interface"));
+                    this.error(RED._("udp.errors.interface"));
                 } else {
-                    node.error(RED._("udp.errors.error",{error:e.errno}));
+                    this.error(RED._("udp.errors.error",{error:e.errno}));
                 }
             }
         });
 
-        node.on("close", function() {
-            if (udpInputPortsInUse.hasOwnProperty(node.port)) {
-                delete udpInputPortsInUse[node.port];
+        this.on("close", () => {
+            if (udpInputPortsInUse.hasOwnProperty(this.port)) {
+                delete udpInputPortsInUse[this.port];
             }
             try {
                 server.close();
-                node.log(RED._("udp.status.listener-stopped"));
+                this.log(RED._("udp.status.listener-stopped"));
             } catch (err) {
-                //node.error(err);
+                //this.error(err);
             }
         });
 
-        try { server.bind(node.port,node.iface); }
+        try { server.bind(this.port, this.iface); }
         catch(e) { } // Don't worry if already bound
     }
-    RED.httpAdmin.get('/udp-ports/:id', RED.auth.needsPermission('udp-ports.read'), function(req,res) {
+    RED.httpAdmin.get('/udp-ports/:id', RED.auth.needsPermission('udp-ports.read'), (req,res) => {
         res.json(Object.keys(udpInputPortsInUse));
     });
     RED.nodes.registerType("xiaomi-gateway in",GatewayIn);
@@ -147,10 +143,9 @@ module.exports = function(RED) {
         this.addr = n.ip;
         this.ipv = this.ip && this.ip.indexOf(":") >= 0 ? "udp6" : "udp4";
         this.multicast = false;
-        var node = this;
 
-        var opts = {type:node.ipv, reuseAddr:true};
-        if (process.version.indexOf("v0.10") === 0) { opts = node.ipv; }
+        var opts = {type:this.ipv, reuseAddr:true};
+        if (process.version.indexOf("v0.10") === 0) { opts = this.ipv; }
 
         var sock;
         if (udpInputPortsInUse[this.outport]) {
@@ -158,7 +153,7 @@ module.exports = function(RED) {
         }
         else {
             sock = dgram.createSocket(opts);  // default to udp4
-            sock.on("error", function(err) {
+            sock.on("error", (err) => {
                 // Any async error will also get reported in the sock.send call.
                 // This handler is needed to ensure the error marked as handled to
                 // prevent it going to the global error handler and shutting node-red
@@ -168,27 +163,27 @@ module.exports = function(RED) {
         }
 
         if (!udpInputPortsInUse[this.outport]) {
-            sock.bind(node.outport);
-            node.log(RED._("udp.status.ready",{outport:node.outport,host:node.addr,port:node.port}));
+            sock.bind(this.outport);
+            this.log(RED._("udp.status.ready",{outport:this.outport,host:this.addr,port:this.port}));
         } else {
-            node.log(RED._("udp.status.ready-nolocal",{host:node.addr,port:node.port}));
+            this.log(RED._("udp.status.ready-nolocal",{host:this.addr,port:this.port}));
         }
 
-        node.on("input", function(msg) {
+        this.on("input", (msg) => {
             if (msg.hasOwnProperty("payload")) {
-                var add = node.addr || msg.ip || "";
-                var por = node.port || msg.port || 0;
+                var add = this.addr || msg.ip || "";
+                var por = this.port || msg.port || 0;
                 if (add === "") {
-                    node.warn(RED._("udp.errors.ip-notset"));
+                    this.warn(RED._("udp.errors.ip-notset"));
                 } else if (por === 0) {
-                    node.warn(RED._("udp.errors.port-notset"));
+                    this.warn(RED._("udp.errors.port-notset"));
                 } else if (isNaN(por) || (por < 1) || (por > 65535)) {
-                    node.warn(RED._("udp.errors.port-invalid"));
+                    this.warn(RED._("udp.errors.port-invalid"));
                 } else {
                     var message = Buffer.from(JSON.stringify(msg.payload));
-                    sock.send(message, 0, message.length, por, add, function(err, bytes) {
+                    sock.send(message, 0, message.length, por, add, (err, bytes) => {
                         if (err) {
-                            node.error("udp : "+err,msg);
+                            this.error("udp : "+err,msg);
                         }
                         message = null;
                     });
@@ -196,15 +191,15 @@ module.exports = function(RED) {
             }
         });
 
-        node.on("close", function() {
-            if (udpInputPortsInUse.hasOwnProperty(node.outport)) {
-                delete udpInputPortsInUse[node.outport];
+        this.on("close", () => {
+            if (udpInputPortsInUse.hasOwnProperty(this.outport)) {
+                delete udpInputPortsInUse[this.outport];
             }
             try {
                 sock.close();
-                node.log(RED._("udp.status.output-stopped"));
+                this.log(RED._("udp.status.output-stopped"));
             } catch (err) {
-                //node.error(err);
+                //this.error(err);
             }
         });
     }

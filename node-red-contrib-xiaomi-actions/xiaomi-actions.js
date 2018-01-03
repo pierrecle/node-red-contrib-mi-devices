@@ -1,154 +1,106 @@
-module.exports = function(RED) {
-    "use strict";
-    var miDevicesUtils = require('../utils');
+const miDevicesUtils = require('../src/utils');
 
+module.exports = (RED) => {
+    /*********************************************
+     Read data from Gateway
+     *********************************************/
     function XiaomiActionRead(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
 
-        node.on('input', function(msg) {
+        this.on('input', (msg) => {
             if(msg.sid) {
-                msg.payload = {
-                    cmd: "read",
-                    sid: msg.sid
-                };
-                node.send(msg);
+                msg.payload = { cmd: "read", sid: msg.sid };
+                this.send(msg);
             }
         });
     }
     RED.nodes.registerType("xiaomi-actions read", XiaomiActionRead);
 
-
+    /*********************************************
+     Get registred ids of devices on gateway
+     *********************************************/
     function XiaomiActionGetIdList(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
 
-        node.on('input', function(msg) {
-            msg.payload = {
-                cmd: "get_id_list"
-            };
+        this.on('input', (msg) => {
+            msg.payload = { cmd: "get_id_list" };
             node.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions get_id_list", XiaomiActionGetIdList);
 
-
+    /*********************************************
+     Virtual single click on a button
+     *********************************************/
     function XiaomiActionSingleClick(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
 
-        node.on('input', function(msg) {
-            if(msg.gateway && msg.sid && msg.gateway.key && msg.gateway.lastToken) {
-                msg.payload = {
-                    cmd: "write",
-                    data: {
-                        status: "click",
-                        sid: msg.sid,
-                        key: miDevicesUtils.getGatewayKey(msg.gateway.key, msg.gateway.lastToken)
-                    }
-                };
-                node.send(msg);
-            }
+        this.on('input', (msg) => {
+            this.gateway = msg.gateway;
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, {status: "click", sid: msg.sid});
         });
     }
     RED.nodes.registerType("xiaomi-actions click", XiaomiActionSingleClick);
 
-
+    /*********************************************
+     Virtual Double click on a button
+     *********************************************/
     function XiaomiActionDoubleClick(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
 
-        node.on('input', function(msg) {
-            if(msg.gateway && msg.sid && msg.gateway.key && msg.gateway.lastToken) {
-                msg.payload = {
-                    cmd: "write",
-                    data: {
-                        status: "double_click",
-                        sid: msg.sid,
-                        key: miDevicesUtils.getGatewayKey(msg.gateway.key, msg.gateway.lastToken)
-                    }
-                };
-                node.send(msg);
-            }
+        this.on('input', (msg) => {
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, {status: "double_click", sid: msg.sid});
         });
     }
     RED.nodes.registerType("xiaomi-actions double_click", XiaomiActionDoubleClick);
 
-
-
-
+    /*********************************************
+     Set the gateway light
+     *********************************************/
     function XiaomiActionGatewayLight(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.color = RED.nodes.getNode(config.color);
         this.brightness = RED.nodes.getNode(config.brightness);
-        var node = this;
 
-        node.on('input', function(msg) {
-            if(node.gateway && node.gateway.sid && node.gateway.key && node.gateway.lastToken) {
-                var color = msg.color || node.color;
-                var brightness = msg.brightness || node.brightness;
-                var rgb = miDevicesUtils.computeColorValue(brightness, color.red, color.green, color.blue);
-                msg.payload = {
-                    cmd: "write",
-                    data: {
-                        rgb: rgb,
-                        sid: node.gateway.sid,
-                        key: miDevicesUtils.getGatewayKey(node.gateway.key, node.gateway.lastToken)
-                    }
-                };
-                node.send(msg);
-            }
+        this.on('input', (msg) => {
+            let color = msg.color || this.color;
+            let brightness = msg.brightness || this.brightness;
+            let rgb = miDevicesUtils.computeColorValue(brightness, color.red, color.green, color.blue);
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, {rgb: rgb});
         });
     }
     RED.nodes.registerType("xiaomi-actions gateway_light", XiaomiActionGatewayLight);
 
-
-
-
+    /*********************************************
+     Play a sound on the gateway
+     *********************************************/
     function XiaomiActionGatewaySound(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.mid = config.mid;
         this.volume = config.volume;
-        var node = this;
 
-        node.on('input', function(msg) {
-            if(node.gateway && node.gateway.sid && node.gateway.key && node.gateway.lastToken) {
-                msg.payload = {
-                    cmd: "write",
-                    data: {
-                        mid: parseInt(msg.mid || node.mid),
-                        volume: parseInt(msg.volume || node.volume),
-                        sid: node.gateway.sid,
-                        key: miDevicesUtils.getGatewayKey(node.gateway.key, node.gateway.lastToken)
-                    }
-                };
-                node.send(msg);
-            }
+        this.on('input', (msg) => {
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, {
+                mid: parseInt(msg.mid || this.mid),
+                volume: parseInt(msg.volume || this.volume)
+            });
         });
     }
     RED.nodes.registerType("xiaomi-actions gateway_sound", XiaomiActionGatewaySound);
 
-
-
+    /*********************************************
+     Stop playing a sound on the gateway
+     *********************************************/
     function XiaomiActionGatewayStopSound(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
-        var node = this;
 
-        node.on('input', function(msg) {
-            if(node.gateway && node.gateway.sid && node.gateway.key && node.gateway.lastToken) {
-                msg.payload = {
-                    cmd: "write",
-                    data: {
-                        mid: 1000,
-                        sid: node.gateway.sid,
-                        key: miDevicesUtils.getGatewayKey(node.gateway.key, node.gateway.lastToken)
-                    }
-                };
-                node.send(msg);
-            }
+        this.on('input', function(msg) {
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, {
+                mid: 1000
+            });
         });
     }
     RED.nodes.registerType("xiaomi-actions gateway_stop_sound", XiaomiActionGatewayStopSound);

@@ -7,7 +7,7 @@ module.exports = {
           When full, CR2032 batteries are between 3 and 3.4V
           http://farnell.com/datasheets/1496885.pdf
         */
-        return Math.min(Math.round((voltage - 2200) / 14), 100);
+        return Math.min(Math.round((voltage - 2200) / 10), 100);
     },
     setStatus: function(node, data) {
         if (data.voltage) {
@@ -39,6 +39,18 @@ module.exports = {
 
         return key;
     },
+    sendWritePayloadToGateway: function(node, msg, data) {
+        let gateway = node.gateway;
+        if(gateway && gateway.sid && gateway.key && gateway.lastToken) {
+            data.sid = data.sid || gateway.sid;
+            data.key = this.getGatewayKey(gateway.key, gateway.lastToken);
+            msg.payload = {
+                cmd: "write",
+                data: data
+            };
+            node.send(msg);
+        }
+    },
     prepareForGatewayRequest: function(node, msg) {
         msg.sid = node.sid;
         msg.gateway = node.gateway;
@@ -64,5 +76,31 @@ module.exports = {
             brightness: brightness,
             color: { red: red, green: green, blue: blue }
         };
+    },
+    defaultNode: function(RED, config, node) {
+        RED.nodes.createNode(node, config);
+        node.gateway = RED.nodes.getNode(config.gateway);
+        node.sid = config.sid;
+
+        node.status({fill:"grey", shape:"ring", text:"battery - na"});
+
+        if (node.gateway) {
+            node.on('input', (msg) => {
+                let payload = msg.payload;
+
+                // Input from gateway
+                if (payload.sid) {
+                    if (payload.sid == node.sid) {
+                        miDevicesUtils.setStatus(node, payload.data);
+                        node.send([msg]);
+                    }
+                }
+                // Prepare for request
+                else {
+                    miDevicesUtils.prepareForGatewayRequest(node, msg);
+                    node.send(msg);
+                }
+            });
+        }
     }
 }

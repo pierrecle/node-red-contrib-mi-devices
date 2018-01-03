@@ -1,5 +1,4 @@
-module.exports = function(RED) {
-
+module.exports = (RED) => {
     function XiaomiConfiguratorNode(n) {
         RED.nodes.createNode(this, n);
         this.name = n.name;
@@ -12,5 +11,4 @@ module.exports = function(RED) {
     }
 
     RED.nodes.registerType("xiaomi-configurator", XiaomiConfiguratorNode);
-
 }

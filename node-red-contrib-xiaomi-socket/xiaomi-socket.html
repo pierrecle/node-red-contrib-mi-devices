@@ -11,8 +11,7 @@
             output: {value: "0"}
         },
         inputs: 1,
-        outputs: 2,
-        outputLabels: ["Status","Control"],
+        outputs: 1,
         paletteLabel: "plug (zigbee)",
         icon: "outlet-icon.png",
         label: function () {
@@ -25,14 +24,6 @@
             var configNodeID = $('#node-input-gateway').val();
             // Get the config node using the ID:
             var configNode = RED.nodes.node(configNodeID);
-
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
 
             $("#node-input-gateway").change(function () {
 
@@ -65,22 +56,6 @@
     <div class="form-row">
         <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
         <select id="node-input-sid" placeholder="xiaomi gateway"></select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-            <option value="2">Template</option>
-        </select>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-onmsg"><i class="fa fa-power-off"></i> On msg</label>
-        <input type="text" id="node-input-onmsg">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-offmsg"><i class="fa fa-power-off"></i> Off msg</label>
-        <input type="text" id="node-input-offmsg">
     </div>
 </script>
 
@@ -115,41 +90,22 @@
         </li>
     </ol>
 
-    <h3>Details</h3>
+    <h4>Details</h4>
     <p>The incoming json message is parsed if the type model is <code>plug</code> and
      the <code>sid</code> matches the configured value for this device.</p>
     <p>On the input you can send the string <code>on</code> to switch the plug on. To turn it off just send the string <code>off</code></p>
-    <p>Output 1 reports the status, output 2 is the write command for the plug.</p>
-
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
-    </p>
-
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the values <code>on</code> or <code>off</code> on output 1.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
-
     <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "write_ack"
-        model: "plug"
-        sid: "158d00012f1fb5"
-        short_id: 47414
-        data: "{
-                    "voltage":3600,
-                    "status":"off",
-                    "inuse":"0",
-                    "power_consumed":"4000",
-                    "load_power":"0"
-               }"
-    }</pre></p>
+    <p><pre>{
+  cmd: "write_ack"
+  model: "plug"
+  sid: "158d00012f1fb5"
+  short_id: 47414
+  data: {
+    voltage:3600,
+    status:"off",
+    inuse:"0",
+    power_consumed:"4000",
+    load_power:"0"
+  }
+}</pre></p>
 </script>

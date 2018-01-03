@@ -5,14 +5,10 @@
         defaults: {
             gateway: {value:"", type:"xiaomi-configurator"},
             name: {value: ""},
-            sid: {value: "", required: true},
-            openmsg: {value: ""},
-            closemsg: {value: ""},
-            output: {value: "0"}
+            sid: {value: "", required: true}
         },
         inputs: 1,
         outputs: 1,
-        outputLabels: ["Status"],
         paletteLabel: "contact",
         icon: "door-icon.png",
         label: function () {
@@ -52,14 +48,6 @@
             $("#node-input-gateway").change(function () {
                 changeGateway("magnet");
             });
-
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
         },
         oneditsave: function() {
             var node = this;
@@ -81,22 +69,6 @@
         <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
         <select id="node-input-sid" placeholder="xiaomi gateway"></select>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-            <option value="2">Template</option>
-        </select>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-openmsg"><i class="fa fa-circle-o-notch"></i> Open msg</label>
-        <input type="text" id="node-input-openmsg">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-closemsg"><i class="fa fa-circle-o"></i> Close msg</label>
-        <input type="text" id="node-input-closemsg">
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-magnet">
@@ -112,44 +84,27 @@
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <li>State output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway, see below.</dd>
+        </dl>
     </ol>
 
     <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>magnet</code> or <code>sensor_magnet.aq2</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
-    </p>
-
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the sting values <code>open</code> or <code>close</code>.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
-
+    <p>The incoming message is processed if the <code>sid</code> matches the configured value for this device.</p>
     <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "read_ack"
-        model: "magnet"
-        sid: "158d000112fb5d"
-        short_id: 50301
-        data: "{
-                    "voltage":3015,
-                    "status":"close"
-               }"
-    }</pre></p>
+    <p><pre>{
+  cmd: "read_ack"
+  model: "sensor_magnet.aq2"
+  sid: "158d000112fb5d"
+  short_id: 50301
+  data: {
+    voltage: 3015,
+    status: "close",
+    batteryLevel: 23
+  }
+}</pre>
+Where <code>status</code> can be <code>"open"</code> or <code>"close"</code>, <code>batteryLevel</code> is a computed percentage of remaining battery.
+</p>
 
 </script>
