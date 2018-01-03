@@ -97,11 +97,35 @@ module.exports = (RED) => {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
 
-        this.on('input', function(msg) {
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, {
-                mid: 1000
-            });
+        this.on('input', (msg) => {
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, { mid: 1000 });
         });
     }
     RED.nodes.registerType("xiaomi-actions gateway_stop_sound", XiaomiActionGatewayStopSound);
+
+    /*********************************************
+     Turn device on
+     *********************************************/
+    function XiaomiActionPowerOn(config) {
+        RED.nodes.createNode(this, config);
+        this.gateway = RED.nodes.getNode(config.gateway);
+
+        this.on('input', (msg) => {
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "on", sid: msg.sid});
+        });
+    }
+    RED.nodes.registerType("xiaomi-actions on", XiaomiActionPowerOn);
+
+    /*********************************************
+     Turn device off
+     *********************************************/
+    function XiaomiActionPowerOff(config) {
+        RED.nodes.createNode(this, config);
+        this.gateway = RED.nodes.getNode(config.gateway);
+
+        this.on('input', (msg) => {
+            miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "off", sid: msg.sid});
+        });
+    }
+    RED.nodes.registerType("xiaomi-actions off", XiaomiActionPowerOff);
 }

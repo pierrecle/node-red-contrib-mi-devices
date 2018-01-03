@@ -393,3 +393,87 @@
         <li>Message to connect to a gateway out node.</li>
     </ol>
 </script>
+
+
+<!--  The plug "on" Node  -->
+<script type="text/javascript">
+    RED.nodes.registerType('xiaomi-actions on',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            gateway: {value:"", type:"xiaomi-configurator"},
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "on",
+        icon: "function.png",
+        label: function() {
+            return this.name||"power on";
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="xiaomi-actions on">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-actions on">
+    <p>
+        Turn input device to on.
+        Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
+    </p>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Message to connect to a gateway out node.</li>
+    </ol>
+</script>
+
+
+<!--  The plug "off" Node  -->
+<script type="text/javascript">
+    RED.nodes.registerType('xiaomi-actions off',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            gateway: {value:"", type:"xiaomi-configurator"},
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "off",
+        icon: "function.png",
+        label: function() {
+            return this.name||"power off";
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="xiaomi-actions off">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-actions off">
+    <p>
+        Turn input device to off.
+        Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
+    </p>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Message to connect to a gateway out node.</li>
+    </ol>
+</script>

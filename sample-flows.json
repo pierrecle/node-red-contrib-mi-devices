@@ -1,1 +1,584 @@
-[{"id":"dc16e8cc.447c88","type":"comment","z":"29cca8d2.ba3ad","name":"Get all sensors and gateway statuses","info":"","x":410,"y":60,"wires":[]},{"id":"60ceea08.315bcc","type":"inject","z":"29cca8d2.ba3ad","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":true,"x":127.14285714285711,"y":115,"wires":[["e9a9ee4d.a5be7","c80a86de.845188"]]},{"id":"e9a9ee4d.a5be7","type":"xiaomi-all","z":"29cca8d2.ba3ad","gateway":"","name":"","x":320,"y":120,"wires":[["afd4a38a.dd9108"]]},{"id":"c80a86de.845188","type":"xiaomi-gateway","z":"29cca8d2.ba3ad","gateway":"","name":"","x":340,"y":180,"wires":[["961cec1f.1b765"]]},{"id":"afd4a38a.dd9108","type":"split","z":"29cca8d2.ba3ad","name":"","splt":"\\n","spltType":"str","arraySplt":1,"arraySpltType":"len","stream":false,"addname":"","x":510,"y":120,"wires":[["27e1c93.302c036"]]},{"id":"27e1c93.302c036","type":"change","z":"29cca8d2.ba3ad","name":"set id","rules":[{"t":"set","p":"sid","pt":"msg","to":"payload.sid","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":670,"y":120,"wires":[["961cec1f.1b765"]]},{"id":"961cec1f.1b765","type":"xiaomi-actions read","z":"29cca8d2.ba3ad","name":"","x":830,"y":120,"wires":[["5abdc8db.a1daa8"]]},{"id":"5abdc8db.a1daa8","type":"xiaomi-gateway out","z":"29cca8d2.ba3ad","name":"","gateway":"","ip":"","x":1020,"y":120,"wires":[]},{"id":"1bcbfc2c.08f714","type":"comment","z":"29cca8d2.ba3ad","name":"Check if a window at least one window open","info":"","x":430,"y":320,"wires":[]},{"id":"8bc218fb.73ac9","type":"xiaomi-all","z":"29cca8d2.ba3ad","gateway":"","name":"","x":320,"y":380,"wires":[["415fe6bd.11d4c8","5bd81268.5f9fd4"]]},{"id":"5812cfb0.d9eac8","type":"split","z":"29cca8d2.ba3ad","name":"","splt":"\\n","spltType":"str","arraySplt":1,"arraySpltType":"len","stream":false,"addname":"","x":650,"y":380,"wires":[["ef37d1d6.887708"]]},{"id":"415fe6bd.11d4c8","type":"function","z":"29cca8d2.ba3ad","name":"filter windows","func":"let windowSensors = msg.payload.filter((e) => {\n    return e.model === \"magnet\";\n});\nmsg.payload = windowSensors;\nreturn msg;","outputs":1,"noerr":0,"x":480,"y":380,"wires":[["5812cfb0.d9eac8"]]},{"id":"ef37d1d6.887708","type":"change","z":"29cca8d2.ba3ad","name":"set id","rules":[{"t":"set","p":"sid","pt":"msg","to":"payload.sid","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":790,"y":380,"wires":[["98852ce9.aa735"]]},{"id":"98852ce9.aa735","type":"xiaomi-actions read","z":"29cca8d2.ba3ad","name":"","x":930,"y":380,"wires":[["be35bfa2.ec1a78"]]},{"id":"be35bfa2.ec1a78","type":"xiaomi-gateway out","z":"29cca8d2.ba3ad","name":"","gateway":"","ip":"","x":1120,"y":380,"wires":[]},{"id":"9805baa8.f32ba8","type":"xiaomi-gateway in","z":"29cca8d2.ba3ad","name":"","gateway":"","ip":"","x":120,"y":500,"wires":[["e203a4da.b336a"]]},{"id":"e203a4da.b336a","type":"function","z":"29cca8d2.ba3ad","name":"set window sensor value","func":"if ([\"magnet\", \"sensor_magnet.aq2\"].indexOf(msg.payload.model) >= 0 && msg.payload.sid !== \"158d0001ab1fa8\") {\n    let globalKey = `windowSensorStatus-${msg.payload.sid}`;\n    global.set(globalKey, msg.payload.data.status);\n}\n","outputs":"0","noerr":0,"x":350,"y":500,"wires":[]},{"id":"11814cf2.65f2ab","type":"function","z":"29cca8d2.ba3ad","name":"get window sensors values","func":"let windowSensors = {};\nmsg.payload.filter((e) => {\n    return e.model === \"magnet\";\n}).forEach((e) => {\n    let globalKey = `windowSensorStatus-${e.sid}`;\n    let value = global.get(globalKey);\n    if(!value || value == \"open\") {\n        windowSensors[e.sid] = value || \"na\";\n    }\n});\n\nmsg.payload = windowSensors;\nif(Object.keys(windowSensors).length) {\n    return [msg, null];\n}\nreturn [null, msg];","outputs":"2","noerr":0,"x":700,"y":440,"wires":[[],[]],"outputLabels":["at least one window is open","all windows are close"]},{"id":"5bd81268.5f9fd4","type":"delay","z":"29cca8d2.ba3ad","name":"","pauseType":"delay","timeout":"500","timeoutUnits":"milliseconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"x":470,"y":440,"wires":[["11814cf2.65f2ab"]]},{"id":"fdc425bb.c90ea","type":"comment","z":"29cca8d2.ba3ad","name":"Doorbell","info":"","x":320,"y":600,"wires":[]},{"id":"96d8c83c.dd8608","type":"xiaomi-gateway in","z":"29cca8d2.ba3ad","name":"","gateway":"","ip":"","x":120,"y":680,"wires":[["8d9fa43a.a28fd"]]},{"id":"8d9fa43a.a28fd","type":"xiaomi-switch","z":"29cca8d2.ba3ad","gateway":"","name":"","sid":"","outmsg":"{{click}}","outmsgdbcl":"{{double_click}}","output":"0","x":320,"y":680,"wires":[["ae8180c0.b83cf8"],[]]},{"id":"ae8180c0.b83cf8","type":"function","z":"29cca8d2.ba3ad","name":"is click","func":"if(msg.payload.cmd === \"report\" && msg.payload.data.status == \"click\") {\n    return msg;\n}\nreturn null;","outputs":"1","noerr":0,"x":490,"y":680,"wires":[["f3982b42.7dbd48","ad55402.64a34c","a7f8875.e596578"]]},{"id":"f3982b42.7dbd48","type":"xiaomi-actions gateway_sound","z":"29cca8d2.ba3ad","gateway":"","name":"","mid":"10","volume":"20","x":670,"y":660,"wires":[["1dd39c.9c849464"]]},{"id":"1dd39c.9c849464","type":"xiaomi-gateway out","z":"29cca8d2.ba3ad","name":"","gateway":"","ip":"","x":1280,"y":660,"wires":[]},{"id":"f8ad4bf7.46bce8","type":"template","z":"29cca8d2.ba3ad","name":"off","field":"brightness","fieldType":"msg","format":"handlebars","syntax":"plain","template":"0","output":"str","x":870,"y":820,"wires":[["cc0ef949.0c961"]]},{"id":"ad55402.64a34c","type":"template","z":"29cca8d2.ba3ad","name":"on","field":"brightness","fieldType":"msg","format":"handlebars","syntax":"plain","template":"100","output":"str","x":870,"y":780,"wires":[["cc0ef949.0c961"]]},{"id":"cc0ef949.0c961","type":"xiaomi-actions gateway_light","z":"29cca8d2.ba3ad","gateway":"","name":"","x":1020,"y":780,"wires":[["1dd39c.9c849464"]]},{"id":"a7f8875.e596578","type":"delay","z":"29cca8d2.ba3ad","name":"500ms","pauseType":"delay","timeout":"500","timeoutUnits":"milliseconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"x":670,"y":740,"wires":[["f8ad4bf7.46bce8","8f6ce154.cdead8"]]},{"id":"8f6ce154.cdead8","type":"delay","z":"29cca8d2.ba3ad","name":"500ms","pauseType":"delay","timeout":"500","timeoutUnits":"milliseconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"x":670,"y":780,"wires":[["ad55402.64a34c","db08762.da8d808"]]},{"id":"db08762.da8d808","type":"delay","z":"29cca8d2.ba3ad","name":"500ms","pauseType":"delay","timeout":"500","timeoutUnits":"milliseconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"x":670,"y":820,"wires":[["f8ad4bf7.46bce8","22a8b9d3.6690c6"]]},{"id":"22a8b9d3.6690c6","type":"delay","z":"29cca8d2.ba3ad","name":"500ms","pauseType":"delay","timeout":"500","timeoutUnits":"milliseconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"x":670,"y":860,"wires":[["ad55402.64a34c","acfc3be9.d2f16"]]},{"id":"acfc3be9.d2f16","type":"delay","z":"29cca8d2.ba3ad","name":"500ms","pauseType":"delay","timeout":"500","timeoutUnits":"milliseconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"x":670,"y":900,"wires":[["f8ad4bf7.46bce8"]]},{"id":"cdfb72cf.2ed4c","type":"comment","z":"29cca8d2.ba3ad","name":"gateway light flick 3 times","info":"","x":910,"y":740,"wires":[]}]
+[
+    {
+        "id": "ade6666b.a390c8",
+        "type": "tab",
+        "label": "Flow 1"
+    },
+    {
+        "id": "524f7aeb.c784cc",
+        "type": "comment",
+        "z": "ade6666b.a390c8",
+        "name": "Get all sensors and gateway statuses",
+        "info": "",
+        "x": 390,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "629029ec.ac6cf8",
+        "type": "inject",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 107.14285714285711,
+        "y": 95,
+        "wires": [
+            [
+                "9e997e5e.27b76",
+                "2fbcb15b.776afe"
+            ]
+        ]
+    },
+    {
+        "id": "9e997e5e.27b76",
+        "type": "xiaomi-all",
+        "z": "ade6666b.a390c8",
+        "gateway": "",
+        "name": "",
+        "x": 300,
+        "y": 100,
+        "wires": [
+            [
+                "c0c7989f.68b528"
+            ]
+        ]
+    },
+    {
+        "id": "2fbcb15b.776afe",
+        "type": "xiaomi-gateway",
+        "z": "ade6666b.a390c8",
+        "gateway": "",
+        "name": "",
+        "x": 320,
+        "y": 160,
+        "wires": [
+            [
+                "cde190e9.0964d"
+            ]
+        ]
+    },
+    {
+        "id": "c0c7989f.68b528",
+        "type": "split",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 490,
+        "y": 100,
+        "wires": [
+            [
+                "40a6c2e5.f08c5c"
+            ]
+        ]
+    },
+    {
+        "id": "40a6c2e5.f08c5c",
+        "type": "change",
+        "z": "ade6666b.a390c8",
+        "name": "set id",
+        "rules": [
+            {
+                "t": "set",
+                "p": "sid",
+                "pt": "msg",
+                "to": "payload.sid",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 100,
+        "wires": [
+            [
+                "cde190e9.0964d"
+            ]
+        ]
+    },
+    {
+        "id": "cde190e9.0964d",
+        "type": "xiaomi-actions read",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "x": 810,
+        "y": 100,
+        "wires": [
+            [
+                "f867af40.57ba08"
+            ]
+        ]
+    },
+    {
+        "id": "f867af40.57ba08",
+        "type": "xiaomi-gateway out",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "gateway": "",
+        "ip": "",
+        "x": 1000,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "a0b884dc.c53688",
+        "type": "comment",
+        "z": "ade6666b.a390c8",
+        "name": "Check if a window at least one window open",
+        "info": "",
+        "x": 410,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "46856121.3b579",
+        "type": "xiaomi-all",
+        "z": "ade6666b.a390c8",
+        "gateway": "",
+        "name": "",
+        "x": 300,
+        "y": 360,
+        "wires": [
+            [
+                "11205903.0cc817",
+                "3bac4cbb.04ddb4"
+            ]
+        ]
+    },
+    {
+        "id": "c9823238.f0de8",
+        "type": "split",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 630,
+        "y": 360,
+        "wires": [
+            [
+                "242201e2.f80c66"
+            ]
+        ]
+    },
+    {
+        "id": "11205903.0cc817",
+        "type": "function",
+        "z": "ade6666b.a390c8",
+        "name": "filter windows",
+        "func": "let windowSensors = msg.payload.filter((e) => {\n    return e.model === \"magnet\";\n});\nmsg.payload = windowSensors;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 360,
+        "wires": [
+            [
+                "c9823238.f0de8"
+            ]
+        ]
+    },
+    {
+        "id": "242201e2.f80c66",
+        "type": "change",
+        "z": "ade6666b.a390c8",
+        "name": "set id",
+        "rules": [
+            {
+                "t": "set",
+                "p": "sid",
+                "pt": "msg",
+                "to": "payload.sid",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 360,
+        "wires": [
+            [
+                "922d6ca6.96b83"
+            ]
+        ]
+    },
+    {
+        "id": "922d6ca6.96b83",
+        "type": "xiaomi-actions read",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "x": 910,
+        "y": 360,
+        "wires": [
+            [
+                "de2a89d1.8e32c8"
+            ]
+        ]
+    },
+    {
+        "id": "de2a89d1.8e32c8",
+        "type": "xiaomi-gateway out",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "gateway": "",
+        "ip": "",
+        "x": 1100,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8139cbfb.cb0d1",
+        "type": "xiaomi-gateway in",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "gateway": "",
+        "ip": "",
+        "x": 100,
+        "y": 480,
+        "wires": [
+            [
+                "b5f98d8a.5e8298"
+            ]
+        ]
+    },
+    {
+        "id": "b5f98d8a.5e8298",
+        "type": "function",
+        "z": "ade6666b.a390c8",
+        "name": "set window sensor value",
+        "func": "if ([\"magnet\", \"sensor_magnet.aq2\"].indexOf(msg.payload.model) >= 0 && msg.payload.sid !== \"158d0001ab1fa8\") {\n    let globalKey = `windowSensorStatus-${msg.payload.sid}`;\n    global.set(globalKey, msg.payload.data.status);\n}\n",
+        "outputs": "0",
+        "noerr": 0,
+        "x": 330,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "3812ee82.85f612",
+        "type": "function",
+        "z": "ade6666b.a390c8",
+        "name": "get window sensors values",
+        "func": "let windowSensors = {};\nmsg.payload.filter((e) => {\n    return e.model === \"magnet\";\n}).forEach((e) => {\n    let globalKey = `windowSensorStatus-${e.sid}`;\n    let value = global.get(globalKey);\n    if(!value || value == \"open\") {\n        windowSensors[e.sid] = value || \"na\";\n    }\n});\n\nmsg.payload = windowSensors;\nif(Object.keys(windowSensors).length) {\n    return [msg, null];\n}\nreturn [null, msg];",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 680,
+        "y": 420,
+        "wires": [
+            [],
+            []
+        ],
+        "outputLabels": [
+            "at least one window is open",
+            "all windows are close"
+        ]
+    },
+    {
+        "id": "3bac4cbb.04ddb4",
+        "type": "delay",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 450,
+        "y": 420,
+        "wires": [
+            [
+                "3812ee82.85f612"
+            ]
+        ]
+    },
+    {
+        "id": "4172e627.352338",
+        "type": "comment",
+        "z": "ade6666b.a390c8",
+        "name": "Doorbell",
+        "info": "",
+        "x": 300,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "24cf3af8.5d14ae",
+        "type": "xiaomi-gateway in",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "gateway": "",
+        "ip": "",
+        "x": 100,
+        "y": 660,
+        "wires": [
+            [
+                "6f68150a.27ebd4"
+            ]
+        ]
+    },
+    {
+        "id": "303dbf84.93647",
+        "type": "function",
+        "z": "ade6666b.a390c8",
+        "name": "is click",
+        "func": "if(msg.payload.cmd === \"report\" && msg.payload.data.status == \"click\") {\n    return msg;\n}\nreturn null;",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 470,
+        "y": 660,
+        "wires": [
+            [
+                "5f7b5c66.a6aae4",
+                "d030347d.988258",
+                "b6476cff.be3b08"
+            ]
+        ]
+    },
+    {
+        "id": "5f7b5c66.a6aae4",
+        "type": "xiaomi-actions gateway_sound",
+        "z": "ade6666b.a390c8",
+        "gateway": "",
+        "name": "",
+        "mid": "10",
+        "volume": "20",
+        "x": 650,
+        "y": 640,
+        "wires": [
+            [
+                "6e37698a.70dda"
+            ]
+        ]
+    },
+    {
+        "id": "6e37698a.70dda",
+        "type": "xiaomi-gateway out",
+        "z": "ade6666b.a390c8",
+        "name": "",
+        "gateway": "",
+        "ip": "",
+        "x": 1260,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "1aea30f.c00254f",
+        "type": "template",
+        "z": "ade6666b.a390c8",
+        "name": "off",
+        "field": "brightness",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "plain",
+        "template": "0",
+        "output": "str",
+        "x": 850,
+        "y": 800,
+        "wires": [
+            [
+                "464cf932.2d56"
+            ]
+        ]
+    },
+    {
+        "id": "d030347d.988258",
+        "type": "template",
+        "z": "ade6666b.a390c8",
+        "name": "on",
+        "field": "brightness",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "plain",
+        "template": "100",
+        "output": "str",
+        "x": 850,
+        "y": 760,
+        "wires": [
+            [
+                "464cf932.2d56"
+            ]
+        ]
+    },
+    {
+        "id": "464cf932.2d56",
+        "type": "xiaomi-actions gateway_light",
+        "z": "ade6666b.a390c8",
+        "gateway": "",
+        "name": "",
+        "x": 1000,
+        "y": 760,
+        "wires": [
+            [
+                "6e37698a.70dda"
+            ]
+        ]
+    },
+    {
+        "id": "b6476cff.be3b08",
+        "type": "delay",
+        "z": "ade6666b.a390c8",
+        "name": "500ms",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 650,
+        "y": 720,
+        "wires": [
+            [
+                "1aea30f.c00254f",
+                "4673a161.b816d8"
+            ]
+        ]
+    },
+    {
+        "id": "4673a161.b816d8",
+        "type": "delay",
+        "z": "ade6666b.a390c8",
+        "name": "500ms",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 650,
+        "y": 760,
+        "wires": [
+            [
+                "d030347d.988258",
+                "e07cace.7d37c5"
+            ]
+        ]
+    },
+    {
+        "id": "e07cace.7d37c5",
+        "type": "delay",
+        "z": "ade6666b.a390c8",
+        "name": "500ms",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 650,
+        "y": 800,
+        "wires": [
+            [
+                "1aea30f.c00254f",
+                "f12b5663.1a82c8"
+            ]
+        ]
+    },
+    {
+        "id": "f12b5663.1a82c8",
+        "type": "delay",
+        "z": "ade6666b.a390c8",
+        "name": "500ms",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 650,
+        "y": 840,
+        "wires": [
+            [
+                "d030347d.988258",
+                "4b1d8119.5d292"
+            ]
+        ]
+    },
+    {
+        "id": "4b1d8119.5d292",
+        "type": "delay",
+        "z": "ade6666b.a390c8",
+        "name": "500ms",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 650,
+        "y": 880,
+        "wires": [
+            [
+                "1aea30f.c00254f"
+            ]
+        ]
+    },
+    {
+        "id": "7db6953.95a0cec",
+        "type": "comment",
+        "z": "ade6666b.a390c8",
+        "name": "gateway light flick 3 times",
+        "info": "",
+        "x": 890,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "6f68150a.27ebd4",
+        "type": "xiaomi-switch",
+        "z": "ade6666b.a390c8",
+        "gateway": "",
+        "name": "",
+        "sid": "",
+        "outmsg": "{{click}}",
+        "outmsgdbcl": "{{double_click}}",
+        "output": "0",
+        "x": 300,
+        "y": 660,
+        "wires": [
+            [
+                "303dbf84.93647"
+            ]
+        ]
+    }
+]

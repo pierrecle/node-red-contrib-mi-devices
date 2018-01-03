@@ -18,7 +18,7 @@ module.exports = (RED) => {
                 this.plug = plug;
                 this.status({fill:"green", shape:"dot", text:"connected"});
                 connectionState = "connected";
-                delayedStatusMsgUpdate(node);
+                delayedStatusMsgUpdate(this);
 
                 this.plug.on('propertyChanged', (e) => {
                     if (e.property === "power") {

@@ -36,20 +36,20 @@ Note that the Wifi power plug is not configured through the configurator as it i
 
 The Xiaomi configurator screen with ease of use to configure your different devices.
 
-![Mi configurator in node-red](mi-configurator.png?raw=true "Mi configurator in node-red")
+![Mi configurator in node-red](resources/mi-configurator.png?raw=true "Mi configurator in node-red")
 
 Tip: use the configurator from the side-panel (hamburger menu, configuration nodes) to manage your devices. Node-red doesn't update underlying edit screens if the configuration panel is opened / closed from the edit node screen. (If you do, you need to first close the edit node screen and reopen it by double-clicking the node you want to edit the properties for.)
 
 ### How to use different nodes
 
 Here an example of how to use the different nodes:
-![Mi devices example in node-red](mi-devices-overview.png?raw=true "Mi devices example in node-red")
+![Mi devices example in node-red](resources/mi-devices-overview.png?raw=true "Mi devices example in node-red")
 
 
 ### Sample flows
 
 Here are different flow (screenshot of [importable sample-flows.json](sample-flows.json "Different flows using Mi Devices")):
-![Mi devices example in node-red](mi-devices-sample.png?raw=true "Mi devices flow sample")
+![Mi devices example in node-red](resources/mi-devices-sample.png?raw=true "Mi devices flow sample")
 
 ## Enable LAN mode
 
@@ -69,8 +69,8 @@ Mainland China and language can set on English.
 
 If you change here something, you lose your password!
 
-![Gateway advanced mode](xiaomi-gateway-advanced-mode.png?raw=true "Gateway advanced mode")
-![Gateway LAN mode enabled](xiaomi-gateway-lan-enabled.png?raw=true "Gateway LAN mode enabled")
+![Gateway advanced mode](resources/xiaomi-gateway-advanced-mode.png?raw=true "Gateway advanced mode")
+![Gateway LAN mode enabled](resources/xiaomi-gateway-lan-enabled.png?raw=true "Gateway LAN mode enabled")
 
 ## Roadmap
 
@@ -80,7 +80,7 @@ If you change here something, you lose your password!
 - [ ] Set action status when no token available
 - [ ] Add gateway status
 - [ ] Update icons
-- [ ] Refactor socket and set on/off actions
+- [X] Refactor socket and add on/off actions
 - [X] Add device SID in output
 - [X] Remove different output styles
 - [X] Code cleanup
