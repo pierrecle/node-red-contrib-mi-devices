@@ -1,13 +1,15 @@
 [
     {
-        "id": "ade6666b.a390c8",
+        "id": "821cff63.382248",
         "type": "tab",
-        "label": "Flow 1"
+        "label": "Mi Devices Sample",
+        "disabled": false,
+        "info": ""
     },
     {
-        "id": "524f7aeb.c784cc",
+        "id": "6caf94b0.f846f4",
         "type": "comment",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "Get all sensors and gateway statuses",
         "info": "",
         "x": 390,
@@ -15,9 +17,9 @@
         "wires": []
     },
     {
-        "id": "629029ec.ac6cf8",
+        "id": "e28ead99.c33338",
         "type": "inject",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "topic": "",
         "payload": "",
@@ -29,43 +31,43 @@
         "y": 95,
         "wires": [
             [
-                "9e997e5e.27b76",
-                "2fbcb15b.776afe"
+                "db3b7e35.9432a8",
+                "eae70f40.0c904"
             ]
         ]
     },
     {
-        "id": "9e997e5e.27b76",
+        "id": "db3b7e35.9432a8",
         "type": "xiaomi-all",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "gateway": "",
         "name": "",
         "x": 300,
         "y": 100,
         "wires": [
             [
-                "c0c7989f.68b528"
+                "2e706194.3c27ee"
             ]
         ]
     },
     {
-        "id": "2fbcb15b.776afe",
+        "id": "eae70f40.0c904",
         "type": "xiaomi-gateway",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "gateway": "",
         "name": "",
         "x": 320,
         "y": 160,
         "wires": [
             [
-                "cde190e9.0964d"
+                "aa109dae.2d9438"
             ]
         ]
     },
     {
-        "id": "c0c7989f.68b528",
+        "id": "2e706194.3c27ee",
         "type": "split",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "splt": "\\n",
         "spltType": "str",
@@ -77,14 +79,14 @@
         "y": 100,
         "wires": [
             [
-                "40a6c2e5.f08c5c"
+                "e1cbbde3.9a2ab8"
             ]
         ]
     },
     {
-        "id": "40a6c2e5.f08c5c",
+        "id": "e1cbbde3.9a2ab8",
         "type": "change",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "set id",
         "rules": [
             {
@@ -104,27 +106,27 @@
         "y": 100,
         "wires": [
             [
-                "cde190e9.0964d"
+                "aa109dae.2d9438"
             ]
         ]
     },
     {
-        "id": "cde190e9.0964d",
+        "id": "aa109dae.2d9438",
         "type": "xiaomi-actions read",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "x": 810,
         "y": 100,
         "wires": [
             [
-                "f867af40.57ba08"
+                "d42a0577.a9bbb"
             ]
         ]
     },
     {
-        "id": "f867af40.57ba08",
+        "id": "d42a0577.a9bbb",
         "type": "xiaomi-gateway out",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "gateway": "",
         "ip": "",
@@ -133,9 +135,9 @@
         "wires": []
     },
     {
-        "id": "a0b884dc.c53688",
+        "id": "43eaf652.25b4b8",
         "type": "comment",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "Check if a window at least one window open",
         "info": "",
         "x": 410,
@@ -143,24 +145,24 @@
         "wires": []
     },
     {
-        "id": "46856121.3b579",
+        "id": "2df06b27.29db24",
         "type": "xiaomi-all",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "gateway": "",
         "name": "",
         "x": 300,
         "y": 360,
         "wires": [
             [
-                "11205903.0cc817",
-                "3bac4cbb.04ddb4"
+                "219409ac.757b0e",
+                "b6ad7f55.18f99"
             ]
         ]
     },
     {
-        "id": "c9823238.f0de8",
+        "id": "e1ff739f.b36108",
         "type": "split",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "splt": "\\n",
         "spltType": "str",
@@ -172,14 +174,14 @@
         "y": 360,
         "wires": [
             [
-                "242201e2.f80c66"
+                "f03d4922.cee86"
             ]
         ]
     },
     {
-        "id": "11205903.0cc817",
+        "id": "219409ac.757b0e",
         "type": "function",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "filter windows",
         "func": "let windowSensors = msg.payload.filter((e) => {\n    return e.model === \"magnet\";\n});\nmsg.payload = windowSensors;\nreturn msg;",
         "outputs": 1,
@@ -188,14 +190,14 @@
         "y": 360,
         "wires": [
             [
-                "c9823238.f0de8"
+                "e1ff739f.b36108"
             ]
         ]
     },
     {
-        "id": "242201e2.f80c66",
+        "id": "f03d4922.cee86",
         "type": "change",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "set id",
         "rules": [
             {
@@ -215,27 +217,27 @@
         "y": 360,
         "wires": [
             [
-                "922d6ca6.96b83"
+                "fc9ceef6.4b5ab"
             ]
         ]
     },
     {
-        "id": "922d6ca6.96b83",
+        "id": "fc9ceef6.4b5ab",
         "type": "xiaomi-actions read",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "x": 910,
         "y": 360,
         "wires": [
             [
-                "de2a89d1.8e32c8"
+                "5b0ada34.5af104"
             ]
         ]
     },
     {
-        "id": "de2a89d1.8e32c8",
+        "id": "5b0ada34.5af104",
         "type": "xiaomi-gateway out",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "gateway": "",
         "ip": "",
@@ -244,9 +246,9 @@
         "wires": []
     },
     {
-        "id": "8139cbfb.cb0d1",
+        "id": "d9ffa93a.e40638",
         "type": "xiaomi-gateway in",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "gateway": "",
         "ip": "",
@@ -254,14 +256,14 @@
         "y": 480,
         "wires": [
             [
-                "b5f98d8a.5e8298"
+                "1c6df817.0a0bb"
             ]
         ]
     },
     {
-        "id": "b5f98d8a.5e8298",
+        "id": "1c6df817.0a0bb",
         "type": "function",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "set window sensor value",
         "func": "if ([\"magnet\", \"sensor_magnet.aq2\"].indexOf(msg.payload.model) >= 0 && msg.payload.sid !== \"158d0001ab1fa8\") {\n    let globalKey = `windowSensorStatus-${msg.payload.sid}`;\n    global.set(globalKey, msg.payload.data.status);\n}\n",
         "outputs": "0",
@@ -271,9 +273,9 @@
         "wires": []
     },
     {
-        "id": "3812ee82.85f612",
+        "id": "e030edc3.f85a18",
         "type": "function",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "get window sensors values",
         "func": "let windowSensors = {};\nmsg.payload.filter((e) => {\n    return e.model === \"magnet\";\n}).forEach((e) => {\n    let globalKey = `windowSensorStatus-${e.sid}`;\n    let value = global.get(globalKey);\n    if(!value || value == \"open\") {\n        windowSensors[e.sid] = value || \"na\";\n    }\n});\n\nmsg.payload = windowSensors;\nif(Object.keys(windowSensors).length) {\n    return [msg, null];\n}\nreturn [null, msg];",
         "outputs": "2",
@@ -290,9 +292,9 @@
         ]
     },
     {
-        "id": "3bac4cbb.04ddb4",
+        "id": "b6ad7f55.18f99",
         "type": "delay",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "pauseType": "delay",
         "timeout": "500",
@@ -308,14 +310,14 @@
         "y": 420,
         "wires": [
             [
-                "3812ee82.85f612"
+                "e030edc3.f85a18"
             ]
         ]
     },
     {
-        "id": "4172e627.352338",
+        "id": "7838f0b6.d0ea5",
         "type": "comment",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "Doorbell",
         "info": "",
         "x": 300,
@@ -323,9 +325,9 @@
         "wires": []
     },
     {
-        "id": "24cf3af8.5d14ae",
+        "id": "8de3e2f.b76f2a",
         "type": "xiaomi-gateway in",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "gateway": "",
         "ip": "",
@@ -333,14 +335,14 @@
         "y": 660,
         "wires": [
             [
-                "6f68150a.27ebd4"
+                "f96c8911.21e9"
             ]
         ]
     },
     {
-        "id": "303dbf84.93647",
+        "id": "26684d11.692aa2",
         "type": "function",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "is click",
         "func": "if(msg.payload.cmd === \"report\" && msg.payload.data.status == \"click\") {\n    return msg;\n}\nreturn null;",
         "outputs": "1",
@@ -349,16 +351,16 @@
         "y": 660,
         "wires": [
             [
-                "5f7b5c66.a6aae4",
-                "d030347d.988258",
-                "b6476cff.be3b08"
+                "2be5185d.959f2",
+                "1d76619d.106536",
+                "1afbffce.6c1d2"
             ]
         ]
     },
     {
-        "id": "5f7b5c66.a6aae4",
+        "id": "2be5185d.959f2",
         "type": "xiaomi-actions gateway_sound",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "gateway": "",
         "name": "",
         "mid": "10",
@@ -367,14 +369,14 @@
         "y": 640,
         "wires": [
             [
-                "6e37698a.70dda"
+                "7fa04a92.0851dc"
             ]
         ]
     },
     {
-        "id": "6e37698a.70dda",
+        "id": "7fa04a92.0851dc",
         "type": "xiaomi-gateway out",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "",
         "gateway": "",
         "ip": "",
@@ -383,9 +385,9 @@
         "wires": []
     },
     {
-        "id": "1aea30f.c00254f",
+        "id": "21b53d98.e9ecca",
         "type": "template",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "off",
         "field": "brightness",
         "fieldType": "msg",
@@ -397,14 +399,14 @@
         "y": 800,
         "wires": [
             [
-                "464cf932.2d56"
+                "7bac4ce.ffef434"
             ]
         ]
     },
     {
-        "id": "d030347d.988258",
+        "id": "1d76619d.106536",
         "type": "template",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "on",
         "field": "brightness",
         "fieldType": "msg",
@@ -416,28 +418,28 @@
         "y": 760,
         "wires": [
             [
-                "464cf932.2d56"
+                "7bac4ce.ffef434"
             ]
         ]
     },
     {
-        "id": "464cf932.2d56",
+        "id": "7bac4ce.ffef434",
         "type": "xiaomi-actions gateway_light",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "gateway": "",
         "name": "",
         "x": 1000,
         "y": 760,
         "wires": [
             [
-                "6e37698a.70dda"
+                "7fa04a92.0851dc"
             ]
         ]
     },
     {
-        "id": "b6476cff.be3b08",
+        "id": "1afbffce.6c1d2",
         "type": "delay",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "500ms",
         "pauseType": "delay",
         "timeout": "500",
@@ -453,15 +455,15 @@
         "y": 720,
         "wires": [
             [
-                "1aea30f.c00254f",
-                "4673a161.b816d8"
+                "21b53d98.e9ecca",
+                "ad79b644.f7e05"
             ]
         ]
     },
     {
-        "id": "4673a161.b816d8",
+        "id": "ad79b644.f7e05",
         "type": "delay",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "500ms",
         "pauseType": "delay",
         "timeout": "500",
@@ -477,15 +479,15 @@
         "y": 760,
         "wires": [
             [
-                "d030347d.988258",
-                "e07cace.7d37c5"
+                "1d76619d.106536",
+                "8916da4a.6aeb58"
             ]
         ]
     },
     {
-        "id": "e07cace.7d37c5",
+        "id": "8916da4a.6aeb58",
         "type": "delay",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "500ms",
         "pauseType": "delay",
         "timeout": "500",
@@ -501,15 +503,15 @@
         "y": 800,
         "wires": [
             [
-                "1aea30f.c00254f",
-                "f12b5663.1a82c8"
+                "21b53d98.e9ecca",
+                "b83a24c8.4d0f38"
             ]
         ]
     },
     {
-        "id": "f12b5663.1a82c8",
+        "id": "b83a24c8.4d0f38",
         "type": "delay",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "500ms",
         "pauseType": "delay",
         "timeout": "500",
@@ -525,15 +527,15 @@
         "y": 840,
         "wires": [
             [
-                "d030347d.988258",
-                "4b1d8119.5d292"
+                "1d76619d.106536",
+                "ce69d5d.693d4a8"
             ]
         ]
     },
     {
-        "id": "4b1d8119.5d292",
+        "id": "ce69d5d.693d4a8",
         "type": "delay",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "500ms",
         "pauseType": "delay",
         "timeout": "500",
@@ -549,14 +551,14 @@
         "y": 880,
         "wires": [
             [
-                "1aea30f.c00254f"
+                "21b53d98.e9ecca"
             ]
         ]
     },
     {
-        "id": "7db6953.95a0cec",
+        "id": "b7526133.93348",
         "type": "comment",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "name": "gateway light flick 3 times",
         "info": "",
         "x": 890,
@@ -564,9 +566,9 @@
         "wires": []
     },
     {
-        "id": "6f68150a.27ebd4",
+        "id": "f96c8911.21e9",
         "type": "xiaomi-switch",
-        "z": "ade6666b.a390c8",
+        "z": "821cff63.382248",
         "gateway": "",
         "name": "",
         "sid": "",
@@ -577,7 +579,7 @@
         "y": 660,
         "wires": [
             [
-                "303dbf84.93647"
+                "26684d11.692aa2"
             ]
         ]
     }

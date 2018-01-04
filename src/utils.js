@@ -91,13 +91,13 @@ module.exports = {
                 // Input from gateway
                 if (payload.sid) {
                     if (payload.sid == node.sid) {
-                        miDevicesUtils.setStatus(node, payload.data);
+                        this.setStatus(node, payload.data);
                         node.send([msg]);
                     }
                 }
                 // Prepare for request
                 else {
-                    miDevicesUtils.prepareForGatewayRequest(node, msg);
+                    this.prepareForGatewayRequest(node, msg);
                     node.send(msg);
                 }
             });
