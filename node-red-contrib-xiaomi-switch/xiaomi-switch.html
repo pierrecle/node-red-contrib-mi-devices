@@ -83,21 +83,31 @@
     <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>payload
-            <span class="property-type">json</span>
+            <span class="property-type">object</span>
         </dt>
-        <dd>Gateway <code>switch</code> and <code>sensor_switch.aq2</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
+        <dd>
+            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
+            <hr>
+            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>.<br>
+            <hr>
+            Input Gateway node produces message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>.
+        </dd>
     </dl>
 
     <h3>Outputs</h3>
     <ol class="node-ports">
         <dl class="message-properties">
             <dt>payload <span class="property-type">object</span></dt>
-            <dd>Data from gateway, see below.</dd>
+            <dd>Data from gateway when used as a filter (see below).</dd>
+            <dt>sid <span class="property-type">string</span></dt>
+            <dd>Device SID.</dd>
+            <dt>gateway <span class="property-type">object</span></dt>
+            <dd>The <code>xiaomi-configurator</code> object where the device is registred.</dd>
         </dl>
     </ol>
 
     <h4>Details</h4>
-    <p>The incoming message is processed if the <code>sid</code> matches the configured value for this device.</p>
+    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
     <p>Sample message:</p>
     <p><pre>{
   cmd: "report"

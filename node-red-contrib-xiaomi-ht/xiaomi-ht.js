@@ -1,6 +1,8 @@
 const miDevicesUtils = require('../src/utils');
 
 module.exports = (RED) => {
+    // sensor_ht, weather.v1
+
     function XiaomiHtNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);

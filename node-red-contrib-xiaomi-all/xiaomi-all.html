@@ -4,7 +4,9 @@
         color: '#3FADB5',
         defaults: {
             gateway: {value:"", type:"xiaomi-configurator"},
-            name: {value: ""}
+            name: {value: ""},
+            onlyModels: {value: []},
+            excludedSids: { value: []}
         },
         inputs: 1,
         outputs: 1,
@@ -13,6 +15,44 @@
         icon: "mi-all.png",
         label: function () {
             return this.name || "xiaomi-all";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            function changeGateway(gateway, onlyModels, excludedSids) {
+                var configNodeID = gateway || $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        onlyModels = onlyModels || $('#node-input-onlyModels').val() || [];
+                        excludedSids = excludedSids || $('#node-input-excludedSids').val() || [];
+                        $('#node-input-excludedSids').empty();
+                        for (key in configNode.deviceList) {
+                            var device = configNode.deviceList[key];
+                            if (onlyModels.length == 0 || onlyModels.indexOf(device.model) >= 0) {
+                                var option = $('<option value="' + device.sid + '">' + device.desc + '</option>');
+                                if(excludedSids && excludedSids.indexOf(device.sid) >= 0) {
+                                    option.prop('selected', true);
+                                }
+                                $('#node-input-excludedSids').append(option);
+                            }
+                        }
+                    }
+                }
+            }
+
+            changeGateway(this.gateway, this.onlyModels, this.excludedSids);
+            $("#node-input-gateway, #node-input-onlyModels").change(function () {
+                changeGateway();
+            });
+        },
+        oneditsave: function() {
+            if(!$('#node-input-onlyModels').val()) {
+                this.onlyModels = [];
+            }
+            if(!$('#node-input-excludedSids').val()) {
+                this.excludedSids = [];
+            }
         }
     });
 </script>
@@ -26,10 +66,34 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
+    <hr />
+    <h5>Filters</h5>
+    <div class="form-row">
+        <label for="node-input-onlyModels"><i class="icon-tag"></i> Only</label>
+        <select multiple id="node-input-onlyModels">
+            <option value="sensor_ht">Temperature/humidty</option>
+            <option value="motion">Motion</option>
+            <option value="switch">Switches</option>
+            <option value="magnet">Contacts</option>
+            <option value="plug">Plugs</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-excludedSids"><i class="icon-tag"></i> Exclude</label>
+        <select multiple id="node-input-excludedSids" size=10></select>
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-all">
     <p>All devices registred in the gateway, except gateway itself.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>When use as an incoming filter node, <code>sid</code> and <code>model</code> are mandatory.</dd>
+    </dl>
 
     <h3>Outputs</h3>
     <ol class="node-ports">

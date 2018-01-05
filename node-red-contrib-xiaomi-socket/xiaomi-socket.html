@@ -20,22 +20,37 @@
         oneditprepare: function() {
             var node = this;
 
-            // Get the config node id from the select box:
-            var configNodeID = $('#node-input-gateway').val();
-            // Get the config node using the ID:
-            var configNode = RED.nodes.node(configNodeID);
+            if(node.sid) {
+                $('#node-input-sid').val(node.sid);
+            }
 
-            $("#node-input-gateway").change(function () {
-
-            });
-
-            for (key in configNode.deviceList) {
-                var device = configNode.deviceList[key];
-                if (device.model === "plug") {
-                    $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
+            function changeGateway(model) {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        $('#node-input-sid').empty();
+                        for (key in configNode.deviceList) {
+                            var device = configNode.deviceList[key];
+                            if (device.model === model) {
+                                $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
+                            }
+                        }
+                        if(node.sid) {
+                            $('#node-input-sid option[value="' + node.sid + '"]').prop('selected', true);
+                        }
+                    }
                 }
             }
-            $('#node-input-sid').val(node.sid);
+
+            $("#node-input-sid").change(function () {
+                if(!this.name) {
+                    $("#node-input-name").val($('#node-input-sid option:selected').text());
+                }
+            });
+            $("#node-input-gateway").change(function () {
+                changeGateway("plug");
+            });
         },
         oneditsave: function() {
             var node = this;
@@ -71,7 +86,7 @@
         <dt>payload
             <span class="property-type">string | json</span>
         </dt>
-        <dd>Gateway <code>plug</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>. Or <code>on</code> or <code>off</code>.</dd>
+        <dd>When the node is used as filter, gateway <code>plug</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>. Or <code>on</code> or <code>off</code>.</dd>
     </dl>
 
     <h3>Outputs</h3>
