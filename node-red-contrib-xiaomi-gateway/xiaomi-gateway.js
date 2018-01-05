@@ -10,11 +10,11 @@ module.exports = (RED) => {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
 
+        this.status({fill:"red", shape:"ring", text: "offline"});
+
         if (this.gateway) {
             this.on('input', (msg) => {
-                // var payload = JSON.parse(msg);
                 var payload = msg.payload;
-                //this.log("Received message from: " + payload.model + " sid: " + payload.sid + " payload: " + payload.data);
 
                 // Input from gateway
                 if(payload.sid) {
@@ -41,12 +41,15 @@ module.exports = (RED) => {
     // The Input Node
     function GatewayIn(n) {
         RED.nodes.createNode(this,n);
+        this.gatewayNodeId = n.gateway;
         this.gateway = RED.nodes.getNode(n.gateway);
         this.group = "224.0.0.50";
         this.port = 9898;
         this.iface = null;
         this.addr = n.ip;
         this.ipv = this.ip && this.ip.indexOf(":") >= 0 ? "udp6" : "udp4";
+
+        this.status({fill:"red", shape:"ring", text: "offline"});
 
         var opts = {type:this.ipv, reuseAddr:true};
         if (process.version.indexOf("v0.10") === 0) { opts = this.ipv; }
@@ -84,10 +87,18 @@ module.exports = (RED) => {
                     }
                 }
                 msg = { payload: jsonMsg };
-                if(jsonMsg.token && this.gateway && jsonMsg.data.ip && jsonMsg.data.ip === this.gateway.ip) {
-                    this.gateway.lastToken = jsonMsg.token;
-                    if(!this.gateway.sid) {
-                        this.gateway.sid = jsonMsg.sid;
+                if(this.gateway && jsonMsg.data.ip && jsonMsg.data.ip === this.gateway.ip) {
+                    RED.nodes.eachNode((tmpNode) => {
+                        if(tmpNode.type.indexOf("xiaomi-gateway") === 0 && tmpNode.gateway == this.gatewayNodeId) {
+                            let tmpNodeInst = RED.nodes.getNode(tmpNode.id);
+                            tmpNodeInst.status({fill:"blue", shape:"dot", text: "online"});
+                        }
+                    });
+                    if(jsonMsg.token) {
+                        this.gateway.lastToken = jsonMsg.token;
+                        if(!this.gateway.sid) {
+                            this.gateway.sid = jsonMsg.sid;
+                        }
                     }
                 }
                 this.send(msg);
@@ -143,6 +154,8 @@ module.exports = (RED) => {
         this.addr = n.ip;
         this.ipv = this.ip && this.ip.indexOf(":") >= 0 ? "udp6" : "udp4";
         this.multicast = false;
+
+        this.status({fill:"red", shape:"ring", text: "offline"});
 
         var opts = {type:this.ipv, reuseAddr:true};
         if (process.version.indexOf("v0.10") === 0) { opts = this.ipv; }
