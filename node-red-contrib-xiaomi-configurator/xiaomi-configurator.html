@@ -14,11 +14,11 @@
         oneditprepare: function() {
             var node = this;
 
-            var tw_sensor_ht = {value:"sensor_ht", label:"sensor ht", icon:"icons/node-red-contrib-xiaomi-devices/sensor-ht-tw-icon.png"};
-            var tw_magnet = {value:"magnet", label:"contact", icon:"icons/node-red-contrib-xiaomi-devices/magnet-tw-icon.png"};
-            var tw_motion = {value:"motion", label:"motion", icon:"icons/node-red-contrib-xiaomi-devices/motion-tw-icon.png"};
-            var tw_plug = {value:"plug", label:"plug", icon:"icons/node-red-contrib-xiaomi-devices/plug-tw-icon.png"};
-            var tw_switch = {value:"switch", label:"switch", icon:"icons/node-red-contrib-xiaomi-devices/switch-tw-icon.png"};
+            var tw_sensor_ht = {value:"sensor_ht", label:"sensor ht", icon:"icons/node-red-contrib-mi-devices/thermometer-tw-icon.png"};
+            var tw_magnet = {value:"magnet", label:"contact", icon:"icons/node-red-contrib-mi-devices/door-tw-icon.png"};
+            var tw_motion = {value:"motion", label:"motion", icon:"icons/node-red-contrib-mi-devices/motion-tw-icon.png"};
+            var tw_plug = {value:"plug", label:"plug", icon:"icons/node-red-contrib-mi-devices/outlet-tw-icon.png"};
+            var tw_switch = {value:"switch", label:"switch", icon:"icons/node-red-contrib-mi-devices/mi-tw-switch.png"};
 
             $("#node-config-input-devices").css('min-height','250px').css('min-width','450px').editableList({
                 addItem: function(container, i, device) {
@@ -113,7 +113,7 @@
     devices with their device-id (SID), type and a description.</p>
     <p>At the moment the following devices are supported:
     <lu>
-        <li>Humidity & Temperature sensor [sensor ht]</li>
+        <li>Humidity & Temperature sensor [sensor ht/]</li>
         <li>Body motion sensor [motion]</li>
         <li>Magnet contact sensor [contact]</li>
         <li>Wall socket plug (zigbee) [plug]</li>

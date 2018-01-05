@@ -72,19 +72,6 @@ If you change here something, you lose your password!
 ![Gateway advanced mode](resources/xiaomi-gateway-advanced-mode.png?raw=true "Gateway advanced mode")
 ![Gateway LAN mode enabled](resources/xiaomi-gateway-lan-enabled.png?raw=true "Gateway LAN mode enabled")
 
-## Roadmap
-
-- [ ] Integrate Yeelight
-- [ ] Handle Xiaomi Cube
-- [ ] Add filter on "all" node
-- [ ] Set action status when no token available
-- [ ] Add gateway status
-- [X] Update icons
-- [X] Refactor socket and add on/off actions
-- [X] Add device SID in output
-- [X] Remove different output styles
-- [X] Code cleanup
-
 ## Sources
 
 * [Harald Rietman node-red module](https://github.com/hrietman/node-red-contrib-xiaomi-devices)
