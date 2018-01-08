@@ -1,4 +1,12 @@
 <script type="text/javascript">
+    function getOnlyModelsValue(input) {
+        var cleanOnlyModels = [];
+        input.forEach(function(value) {
+            cleanOnlyModels = cleanOnlyModels.concat(value.split(','));
+        });
+        return cleanOnlyModels;
+    }
+
     RED.nodes.registerType('xiaomi-all', {
         category: 'xiaomi',
         color: '#3FADB5',
@@ -24,7 +32,7 @@
                 if (configNodeID) {
                     var configNode = RED.nodes.node(configNodeID);
                     if(configNode) {
-                        onlyModels = onlyModels || $('#node-input-onlyModels').val() || [];
+                        onlyModels = getOnlyModelsValue(onlyModels || $('#node-input-onlyModels').val() || []);
                         excludedSids = excludedSids || $('#node-input-excludedSids').val() || [];
                         $('#node-input-excludedSids').empty();
                         for (key in configNode.deviceList) {
@@ -53,6 +61,7 @@
             if(!$('#node-input-excludedSids').val()) {
                 this.excludedSids = [];
             }
+            this.onlyModels = getOnlyModelsValue(this.onlyModels);
         }
     });
 </script>
@@ -71,10 +80,10 @@
     <div class="form-row">
         <label for="node-input-onlyModels"><i class="icon-tag"></i> Only</label>
         <select multiple id="node-input-onlyModels">
-            <option value="sensor_ht">Temperature/humidty</option>
+            <option value="sensor_ht,weather.v1">Temperature/humidty</option>
             <option value="motion">Motion</option>
-            <option value="switch">Switches</option>
-            <option value="magnet">Contacts</option>
+            <option value="switch,sensor_switch.aq2">Switches</option>
+            <option value="magnet,sensor_magnet.aq2">Contacts</option>
             <option value="plug">Plugs</option>
         </select>
     </div>

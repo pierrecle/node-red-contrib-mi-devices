@@ -6,12 +6,14 @@ module.exports = (RED) => {
         this.gateway = RED.nodes.getNode(config.gateway);
         this.onlyModels = config.onlyModels;
         this.excludedSids = config.excludedSids;
+        console.log(this.onlyModels);
 
 
         this.isDeviceValid = (device) => {
             if((!this.onlyModels || this.onlyModels.length == 0) && (!this.excludedSids || this.excludedSids.length == 0)) {
                 return true;
             }
+            // Is excluded
             if((this.excludedSids && this.excludedSids.length != 0) && this.excludedSids.indexOf(device.sid) >= 0) {
                 return false;
             }
