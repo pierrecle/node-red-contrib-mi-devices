@@ -1,15 +1,22 @@
 module.exports = (RED) => {
-
+    function getOnlyModelsValue(input) {
+        var cleanOnlyModels = [];
+        input.forEach((value) => {
+            cleanOnlyModels = cleanOnlyModels.concat(value.split(','));
+        });
+        return cleanOnlyModels;
+    }
 
     function XiaomiAllNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
-        this.onlyModels = config.onlyModels;
+        this.onlyModels = getOnlyModelsValue(config.onlyModels || []);
         this.excludedSids = config.excludedSids;
         console.log(this.onlyModels);
 
 
         this.isDeviceValid = (device) => {
+            console.log(device.sid, device.model, this.onlyModels, this.excludeSids);
             if((!this.onlyModels || this.onlyModels.length == 0) && (!this.excludedSids || this.excludedSids.length == 0)) {
                 return true;
             }

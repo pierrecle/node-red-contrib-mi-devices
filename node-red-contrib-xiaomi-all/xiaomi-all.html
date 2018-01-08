@@ -1,12 +1,4 @@
 <script type="text/javascript">
-    function getOnlyModelsValue(input) {
-        var cleanOnlyModels = [];
-        input.forEach(function(value) {
-            cleanOnlyModels = cleanOnlyModels.concat(value.split(','));
-        });
-        return cleanOnlyModels;
-    }
-
     RED.nodes.registerType('xiaomi-all', {
         category: 'xiaomi',
         color: '#3FADB5',
@@ -32,7 +24,7 @@
                 if (configNodeID) {
                     var configNode = RED.nodes.node(configNodeID);
                     if(configNode) {
-                        onlyModels = getOnlyModelsValue(onlyModels || $('#node-input-onlyModels').val() || []);
+                        onlyModels = onlyModels || $('#node-input-onlyModels').val() || [];
                         excludedSids = excludedSids || $('#node-input-excludedSids').val() || [];
                         $('#node-input-excludedSids').empty();
                         for (key in configNode.deviceList) {
@@ -61,7 +53,6 @@
             if(!$('#node-input-excludedSids').val()) {
                 this.excludedSids = [];
             }
-            this.onlyModels = getOnlyModelsValue(this.onlyModels);
         }
     });
 </script>
