@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-mi-devices",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A set of nodes to control some of the popular Xiaomi sensors which are connected to the Xiaomi Gateway, and the Gateway itself.",
   "repository": {
     "type": "git",
