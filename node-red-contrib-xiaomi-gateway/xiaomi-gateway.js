@@ -88,18 +88,21 @@ module.exports = (RED) => {
                 }
                 msg = { payload: jsonMsg };
                 if(this.gateway && jsonMsg.data.ip && jsonMsg.data.ip === this.gateway.ip) {
-                    RED.nodes.eachNode((tmpNode) => {
-                        if(tmpNode.type.indexOf("xiaomi-gateway") === 0 && tmpNode.gateway == this.gatewayNodeId) {
-                            let tmpNodeInst = RED.nodes.getNode(tmpNode.id);
-                            tmpNodeInst.status({fill:"blue", shape:"dot", text: "online"});
-                        }
-                    });
                     if(jsonMsg.token) {
                         this.gateway.lastToken = jsonMsg.token;
                         if(!this.gateway.sid) {
                             this.gateway.sid = jsonMsg.sid;
                         }
                     }
+                    RED.nodes.eachNode((tmpNode) => {
+                        if(tmpNode.type.indexOf("xiaomi-gateway") === 0 && tmpNode.gateway == this.gatewayNodeId) {
+                            let tmpNodeInst = RED.nodes.getNode(tmpNode.id);
+                            if(tmpNode.type === "xiaomi-gateway out" && !this.gateway.lastToken) {
+                                tmpNodeInst.status({fill:"yellow", shape:"ring", text: "waiting input"});
+                            }
+                            tmpNodeInst.status({fill:"blue", shape:"dot", text: "online"});
+                        }
+                    });
                 }
                 this.send(msg);
             }
@@ -155,6 +158,9 @@ module.exports = (RED) => {
         this.ipv = this.ip && this.ip.indexOf(":") >= 0 ? "udp6" : "udp4";
         this.multicast = false;
 
+        this.gatewayNodeId = n.gateway;
+        this.gateway = RED.nodes.getNode(n.gateway);
+
         this.status({fill:"red", shape:"ring", text: "offline"});
 
         var opts = {type:this.ipv, reuseAddr:true};
@@ -193,6 +199,9 @@ module.exports = (RED) => {
                 } else if (isNaN(por) || (por < 1) || (por > 65535)) {
                     this.warn(RED._("udp.errors.port-invalid"));
                 } else {
+                    if(msg.payload.cmd === "write" && !msg.payload.data.key && this.gateway && this.gateway.sid && this.gateway.key && this.gateway.lastToken) {
+                        msg.payload.data.key = miDevicesUtils.getGatewayKey(this.gateway.key, this.gateway.lastToken);
+                    }
                     var message = Buffer.from(JSON.stringify(msg.payload));
                     sock.send(message, 0, message.length, por, add, (err, bytes) => {
                         if (err) {

@@ -86,10 +86,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-actions click">
-    <p>
-        Virtual single click for switch.
-        Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
-    </p>
+    <p>Virtual single click for switch.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -136,10 +133,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-actions double_click">
-    <p>
-        Virtual double click for switch.
-        Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
-    </p>
+    <p>Virtual double click for switch.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -183,7 +177,6 @@
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
             name: {value: ""},
             brightness: {value: 100},
             hexRgbColor: {value: "#ffffff"},
@@ -212,10 +205,6 @@
 
 <script type="text/x-red" data-template-name="xiaomi-actions gateway_light">
     <div class="form-row">
-        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
-        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
-    </div>
-    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -230,9 +219,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-actions gateway_light">
-    <p>Change the light of the gateway.
-    Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
-    </p>
+    <p>Change the light of the gateway.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -271,7 +258,6 @@
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
             name: {value: ""},
             mid: {value: ""},
             volume: {value: ""}
@@ -287,10 +273,6 @@
 </script>
 
 <script type="text/x-red" data-template-name="xiaomi-actions gateway_sound">
-    <div class="form-row">
-        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
-        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
-    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -330,9 +312,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-actions gateway_sound">
-    <p>Play a sound on the gateway.
-    Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
-    </p>
+    <p>Play a sound on the gateway.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -359,7 +339,6 @@
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
             name: {value:""}
         },
         inputs:1,
@@ -373,10 +352,6 @@
 </script>
 <script type="text/x-red" data-template-name="xiaomi-actions gateway_stop_sound">
     <div class="form-row">
-        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
-        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
-    </div>
-    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -385,7 +360,6 @@
 <script type="text/x-red" data-help-name="xiaomi-actions gateway_stop_sound">
     <p>
         Stop current playing sound on the gateway.
-        Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
     </p>
 
     <h3>Outputs</h3>
@@ -395,13 +369,12 @@
 </script>
 
 
-<!--  The plug "on" Node  -->
+<!--  The "on" Node  -->
 <script type="text/javascript">
     RED.nodes.registerType('xiaomi-actions on',{
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
             name: {value:""}
         },
         inputs:1,
@@ -415,10 +388,6 @@
 </script>
 <script type="text/x-red" data-template-name="xiaomi-actions on">
     <div class="form-row">
-        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
-        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
-    </div>
-    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -427,23 +396,21 @@
 <script type="text/x-red" data-help-name="xiaomi-actions on">
     <p>
         Turn input device to on.
-        Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
     </p>
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <li>Message to connect to a gateway out node.</li>
+        <li>Message to connect to a gateway/yeelight out node.</li>
     </ol>
 </script>
 
 
-<!--  The plug "off" Node  -->
+<!--  The "off" Node  -->
 <script type="text/javascript">
     RED.nodes.registerType('xiaomi-actions off',{
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
             name: {value:""}
         },
         inputs:1,
@@ -457,10 +424,6 @@
 </script>
 <script type="text/x-red" data-template-name="xiaomi-actions off">
     <div class="form-row">
-        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
-        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
-    </div>
-    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -469,11 +432,44 @@
 <script type="text/x-red" data-help-name="xiaomi-actions off">
     <p>
         Turn input device to off.
-        Note: a gateway input node must be present and have receive a message to get gateway tokens and be able to do the action.
     </p>
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <li>Message to connect to a gateway out node.</li>
+        <li>Message to connect to a gateway/yeelight out node.</li>
+    </ol>
+</script>
+
+
+<!--  The "toggle" Node  -->
+<script type="text/javascript">
+    RED.nodes.registerType('xiaomi-actions toggle',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "toggle",
+        icon: "mi-toggle.png",
+        label: function() {
+            return this.name||"toggle power";
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="xiaomi-actions toggle">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-actions toggle">
+    <p>Toggle device.</p>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Message to connect to a gateway/yeelight out node.</li>
     </ol>
 </script>

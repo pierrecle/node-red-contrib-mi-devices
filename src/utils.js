@@ -39,24 +39,12 @@ module.exports = {
 
         return key;
     },
-    sendWritePayloadToGateway: function(node, msg, data) {
-        let gateway = node.gateway;
-        if(gateway && gateway.sid && gateway.key && gateway.lastToken) {
-            data.sid = data.sid || gateway.sid;
-            data.key = this.getGatewayKey(gateway.key, gateway.lastToken);
-            msg.payload = {
-                cmd: "write",
-                data: data
-            };
-            node.send(msg);
-        }
-    },
     prepareForGatewayRequest: function(node, msg) {
         msg.sid = node.sid;
         msg.gateway = node.gateway;
     },
-    computeColorValue: function (brightness, red, green, blue) {
-        return Math.round(256*256*256*brightness) + (256*256*red) + (256*green) + blue;
+    computeColorValue: function (red, green, blue, brightness) {
+        return (brightness !== undefined ? 256*256*256*brightness : 0) + (256*256*red) + (256*green) + blue;
     },
     computeColor: function (rgb) {
         var blue = rgb % 256;

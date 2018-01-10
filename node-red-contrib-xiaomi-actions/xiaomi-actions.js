@@ -36,8 +36,11 @@ module.exports = (RED) => {
         RED.nodes.createNode(this, config);
 
         this.on('input', (msg) => {
-            this.gateway = msg.gateway;
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, {status: "click", sid: msg.sid});
+            msg.payload = {
+                cmd: "write",
+                data: { status: "click", sid: msg.sid }
+            };
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions click", XiaomiActionSingleClick);
@@ -49,7 +52,11 @@ module.exports = (RED) => {
         RED.nodes.createNode(this, config);
 
         this.on('input', (msg) => {
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, {status: "double_click", sid: msg.sid});
+            msg.payload = {
+                cmd: "write",
+                data: { status: "double_click", sid: msg.sid }
+            };
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions double_click", XiaomiActionDoubleClick);
@@ -59,15 +66,26 @@ module.exports = (RED) => {
      *********************************************/
     function XiaomiActionGatewayLight(config) {
         RED.nodes.createNode(this, config);
-        this.gateway = RED.nodes.getNode(config.gateway);
-        this.color = RED.nodes.getNode(config.color);
-        this.brightness = RED.nodes.getNode(config.brightness);
+        this.color = config.color;
+        this.brightness = config.brightness;
 
         this.on('input', (msg) => {
             let color = msg.color || this.color;
             let brightness = msg.brightness || this.brightness;
-            let rgb = miDevicesUtils.computeColorValue(brightness, color.red, color.green, color.blue);
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, {rgb: rgb});
+            if(msg.sid) {
+                let rgb = miDevicesUtils.computeColorValue(color.red, color.green, color.blue, brightness);
+                msg.payload = {
+                    cmd: "write",
+                    data: { rgb: rgb, sid: msg.sid }
+                };
+            }
+            else {
+                msg.payload = {
+                    color: miDevicesUtils.computeColorValue(color.red, color.green, color.blue),
+                    brightness: brightness
+                };
+            }
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions gateway_light", XiaomiActionGatewayLight);
@@ -77,15 +95,19 @@ module.exports = (RED) => {
      *********************************************/
     function XiaomiActionGatewaySound(config) {
         RED.nodes.createNode(this, config);
-        this.gateway = RED.nodes.getNode(config.gateway);
         this.mid = config.mid;
         this.volume = config.volume;
 
         this.on('input', (msg) => {
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, {
-                mid: parseInt(msg.mid || this.mid),
-                volume: parseInt(msg.volume || this.volume)
-            });
+            msg.payload = {
+                cmd: "write",
+                data: {
+                    mid: parseInt(msg.mid || this.mid),
+                    volume: parseInt(msg.volume || this.volume),
+                    sid: msg.sid
+                }
+            };
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions gateway_sound", XiaomiActionGatewaySound);
@@ -95,10 +117,13 @@ module.exports = (RED) => {
      *********************************************/
     function XiaomiActionGatewayStopSound(config) {
         RED.nodes.createNode(this, config);
-        this.gateway = RED.nodes.getNode(config.gateway);
 
         this.on('input', (msg) => {
-            miDevicesUtils.sendWritePayloadToGateway(this, msg, { mid: 1000 });
+            msg.payload = {
+                cmd: "write",
+                data: { mid: 1000, sid: msg.sid }
+            };
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions gateway_stop_sound", XiaomiActionGatewayStopSound);
@@ -108,16 +133,18 @@ module.exports = (RED) => {
      *********************************************/
     function XiaomiActionPowerOn(config) {
         RED.nodes.createNode(this, config);
-        this.gateway = RED.nodes.getNode(config.gateway);
 
         this.on('input', (msg) => {
             if(msg.sid){
-                miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "on", sid: msg.sid});
+                msg.payload = {
+                    cmd: "write",
+                    data: { status: "on", sid: msg.sid }
+                };
             }
             else {
-                msg.payload = "off";
-                this.send(msg);
+                msg.payload = "on";
             }
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions on", XiaomiActionPowerOn);
@@ -127,17 +154,32 @@ module.exports = (RED) => {
      *********************************************/
     function XiaomiActionPowerOff(config) {
         RED.nodes.createNode(this, config);
-        this.gateway = RED.nodes.getNode(config.gateway);
 
         this.on('input', (msg) => {
             if(msg.sid){
-                miDevicesUtils.sendWritePayloadToGateway(this, msg, { status: "off", sid: msg.sid});
+                msg.payload = {
+                    cmd: "write",
+                    data: { status: "off", sid: msg.sid }
+                };
             }
             else {
                 msg.payload = "off";
-                this.send(msg);
             }
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions off", XiaomiActionPowerOff);
+
+    /*********************************************
+     Toggle device
+     *********************************************/
+    function XiaomiActionToggle(config) {
+        RED.nodes.createNode(this, config);
+
+        this.on('input', (msg) => {
+            msg.payload = "toggle";
+            this.send(msg);
+        });
+    }
+    RED.nodes.registerType("xiaomi-actions toggle", XiaomiActionToggle);
 }
