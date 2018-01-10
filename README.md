@@ -14,6 +14,8 @@ The following devices are currently supported:
 * Motion sensor
 * Power plug (zigbee)
 * Power plug (wifi)
+* Yeelight White (mono)
+* Yeelight RGB
 
 ## Preperation
 
@@ -42,13 +44,13 @@ Tip: use the configurator from the side-panel (hamburger menu, configuration nod
 
 ### How to use different nodes
 
-Here an example of how to use the different nodes (screenshot of [importable flows-overview.json](flows-overview.json "Mi Devices overview")):
+Here an example of how to use the different nodes (screenshot of [importable flows-overview.json](flows-overview.json?raw=true "Mi Devices overview")):
 ![Mi devices example in node-red](resources/mi-devices-overview.png?raw=true "Mi devices example in node-red")
 
 
 ### Sample flows
 
-Here are different flow (screenshot of [importable flows-sample.json](flows-sample.json "Different flows using Mi Devices")):
+Here are different flow (screenshot of [importable flows-sample.json](flows-sample.json?raw=true "Different flows using Mi Devices")):
 ![Mi devices example in node-red](resources/mi-devices-sample.png?raw=true "Mi devices flow sample")
 
 ## Enable LAN mode
@@ -59,7 +61,7 @@ Here are different flow (screenshot of [importable flows-sample.json](flows-samp
 2. Make sure you set your region to: Mainland China under settings -> Locale - required for the moment.
 Mainland China and language can set on English.
 3. Select your Gateway in Mi Home
-4. Then the 3 dots at the top right of the screen
+4. Then click the 3 dots at the top right of the screen
 5. Then click on about
 6. Tap under Tutorial menu (on the blank part) repeatedly
 7. You should see now 3 extra options listed in Chinese until you did now enable the developer mode (like the first screenshot below, if not try all steps again!)
@@ -72,6 +74,19 @@ If you change here something, you lose your password!
 ![Gateway advanced mode](resources/xiaomi-gateway-advanced-mode.png?raw=true "Gateway advanced mode")
 ![Gateway LAN mode enabled](resources/xiaomi-gateway-lan-enabled.png?raw=true "Gateway LAN mode enabled")
 
+### Yeelight
+
+1. Install Yeelight App
+2. Select your Yeelight in Mi Home
+3. Then click the third icon at the bottom of the screen
+4. Then click on the lightning icon "LAN control"
+5. In the new panel, toggle the switch to "on"
+
+The lightning icon should be underline un yellow.
+
+![Yeelight options](resources/xiaomi-yeelight-options.png?raw=true "Yeelight options")
+![Yeelight LAN mode enabled](resources/xiaomi-yeelight-lan-enabled.png?raw=true "Yeelight LAN mode enabled")
+
 ## Sources
 
 * [Harald Rietman node-red module](https://github.com/hrietman/node-red-contrib-xiaomi-devices)
@@ -79,6 +94,7 @@ If you change here something, you lose your password!
 * [louisZl Gateway Local API](https://github.com/louisZL/lumi-gateway-local-api)
 * [Domoticz Gateway Code](https://github.com/domoticz/domoticz/blob/development/hardware/XiaomiGateway.cpp)
 * [Node-red UDP nodes](https://github.com/node-red/node-red/blob/master/nodes/core/io/32-udp.js)
+* [Yeelight specs](http://www.yeelight.com/download/Yeelight_Inter-Operation_Spec.pdf)
 
 ## Credits
 

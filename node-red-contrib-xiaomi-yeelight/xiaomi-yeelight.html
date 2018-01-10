@@ -1,0 +1,79 @@
+<script type="text/javascript">
+    RED.nodes.registerType('xiaomi-yeelight out', {
+        category: 'xiaomi in out',
+        color: '#087F8A',
+        defaults: {
+            name: {value: ""},
+            ip: {value: ""},
+            port: {value:55443, required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        paletteLabel: "yeelight out",
+        icon: "mi-yeelight.png",
+        align: "right",
+        label: function () {
+            return this.name || "yeelight out";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="xiaomi-yeelight out">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ip"><i class="icon-tag"></i> IP</label>
+        <input type="text" id="node-input-ip" placeholder="IP">
+    </div>
+    <div class="form-row">
+        <label for="node-input-port"><i class="icon-tag"></i> Port</label>
+        <input type="text" id="node-input-port" placeholder="Port">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-yeelight out">
+    <p>The Xiaomi Yeelight node</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>
+            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
+            <hr>
+            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>.<br>
+            <hr>
+            Input Gateway node produces message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>.
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway when used as a filter (see below).</dd>
+            <dt>sid <span class="property-type">string</span></dt>
+            <dd>Device SID.</dd>
+            <dt>gateway <span class="property-type">object</span></dt>
+            <dd>The <code>xiaomi-configurator</code> object where the device is registred.</dd>
+        </dl>
+    </ol>
+
+    <h4>Details</h4>
+    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
+    <p>Sample message:</p>
+    <p><pre>{
+  cmd: "report"
+  model: "switch"
+  sid: "158d000128b124"
+  short_id: 56773
+  data: {
+    status: "click",
+    batteryLevel: 23
+  }
+}</pre></p>
+
+</script>
