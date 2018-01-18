@@ -32,7 +32,7 @@ module.exports = (RED) => {
         if (this.gateway) {
             this.on('input', (msg) => {
                 // Filter input
-                if(msg.payload.model && msg.payload.sid) {
+                if(msg.payload && msg.payload.model && msg.payload.sid) {
                     if(!this.isDeviceValid(msg.payload)) {
                         msg = null;
                     }
