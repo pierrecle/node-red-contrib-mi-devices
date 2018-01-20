@@ -19,12 +19,20 @@
         oneditprepare: function() {
             var node = this;
 
+            function getOnlyModelsValue(input) {
+                var cleanOnlyModels = [];
+                input.forEach((value) => {
+                    cleanOnlyModels = cleanOnlyModels.concat(value.split(','));
+                });
+                return cleanOnlyModels;
+            }
+
             function changeGateway(gateway, onlyModels, excludedSids) {
                 var configNodeID = gateway || $('#node-input-gateway').val();
                 if (configNodeID) {
                     var configNode = RED.nodes.node(configNodeID);
                     if(configNode) {
-                        onlyModels = onlyModels || $('#node-input-onlyModels').val() || [];
+                        onlyModels = getOnlyModelsValue(onlyModels || $('#node-input-onlyModels').val() || []);
                         excludedSids = excludedSids || $('#node-input-excludedSids').val() || [];
                         $('#node-input-excludedSids').empty();
                         for (key in configNode.deviceList) {
