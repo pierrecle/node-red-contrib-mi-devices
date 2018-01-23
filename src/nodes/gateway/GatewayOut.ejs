@@ -1,0 +1,54 @@
+<script type="text/x-red" data-template-name="<%= NODES_PREFIX %>-gateway out">
+<div class="form-row">
+    <label for="node-input-gateway"><i class="fa fa-wrench"></i> Gateway</label>
+    <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+</div>
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+</script>
+
+<script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-gateway out">
+<p>This node sends <code>msg.payload</code> to the configured Xiaomi Gateway.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('<%= NODES_PREFIX %>-gateway out',{
+        category: 'xiaomi in out',
+        color: '#087F8A',
+        defaults: {
+            name: {value:""},
+            gateway: {value:"", type:"<%= NODES_PREFIX %>-gateway configurator"}
+        },
+        inputs:1,
+        outputs:0,
+        paletteLabel: "gateway out",
+        icon: "mijia-io.png",
+        align: "right",
+        label: function() {
+            return this.name||"gateway out";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+        oneditprepare: function() {
+            function changeGateway() {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        if(!this.name) {
+                            $("#node-input-name").val(configNode.name);
+                        }
+                        $('#node-input-ip').val(configNode.ip);
+                    }
+                }
+            }
+
+            $("#node-input-gateway").change(function () {
+                changeGateway();
+            });
+        }
+    });
+</script>

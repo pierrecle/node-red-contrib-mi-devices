@@ -1,10 +1,10 @@
 <script type="text/javascript">
-    RED.nodes.registerType('<%= NODE_PREFIX %>-yeelight out', {
+    RED.nodes.registerType('<%= NODES_PREFIX %>-yeelight out', {
         category: 'xiaomi in out',
         color: '#087F8A',
         defaults: {
             name: {value: ""},
-            yeelight: {value:"", type:"<%= NODE_PREFIX %>-yeelight configurator"}
+            yeelight: {value:"", type:"<%= NODES_PREFIX %>-yeelight configurator"}
         },
         inputs: 1,
         outputs: 0,
@@ -35,18 +35,18 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="<%= NODE_PREFIX %>-yeelight out">
+<script type="text/x-red" data-template-name="<%= NODES_PREFIX %>-yeelight out">
     <div class="form-row">
-        <label for="node-input-yeelight"><i class="icon-tag"></i> Yeelight</label>
+        <label for="node-input-yeelight"><i class="fa fa-wrench"></i> Yeelight</label>
         <input type="text" id="node-input-yeelight" placeholder="yeelight">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="<%= NODE_PREFIX %>-yeelight out">
+<script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-yeelight out">
     <p>The Xiaomi Yeelight node</p>
 
     <h3>Inputs</h3>

@@ -1,0 +1,120 @@
+<script type="text/javascript">
+    RED.nodes.registerType('<%= NODES_PREFIX %>-gateway configurator', {
+        category: 'config',
+        defaults: {
+            name: {value: ""},
+            ip: {value: ""},
+            sid: {value: ""},
+            deviceList: {value:{}}
+        },
+        credentials: {
+            key: { type: "text" }
+        },
+        paletteLabel: "gateway configurator",
+        label: function () {
+            return this.name || "gateway configurator";
+        },
+        oneditprepare: function() {
+            RED.settings.miDevicesGatewayConfiguratorDiscoveredGateways.forEach(function(gateway, index) {
+                $('#discovered-gateways').append('<option value="' + gateway.sid + '">' + gateway.sid + ' - ' + gateway.ip + '</option>');
+            });
+            var node = this;
+
+            function addSubdevice(device) {
+                var devicesConfig = {
+                    "sensor": {value:"sensor", label:"sensor ht", icon:"icons/node-red-contrib-mi-devices/thermometer-icon.png"},
+                    "magnet": {value:"magnet", label:"magnet", icon:"icons/node-red-contrib-mi-devices/door-icon.png"},
+                    "motion": {value:"motion", label:"motion", icon:"icons/node-red-contrib-mi-devices/motion-icon.png"},
+                    "switch": {value:"switch", label:"switch", icon:"icons/node-red-contrib-mi-devices/mi-switch.png"},
+                    "plug": {value:"plug", label:"plug zigbee", icon:"icons/node-red-contrib-mi-devices/outlet-icon.png"}
+                };
+
+                var row = $('<div/>', {class: "form-row"}).appendTo($('#input-subdevices'));
+                $('<input/>', {value: device.sid, type: "hidden", name: "sid"}).appendTo(row);
+                $('<input/>', {value: device.type, type: "hidden", name: "type"}).appendTo(row);
+                $('<label/>', {for: "node-config-input-name-" + device.sid}).html('<img src="' + devicesConfig[device.type].icon + '" style="width:24px;height:24px;filter:contrast(0);"> ' + device.sid).appendTo(row);
+                $('<input/>', {id: "node-config-input-name-" + device.sid, type: "text", value: (node.deviceList && node.deviceList[device.sid].name) || devicesConfig[device.type].label}).appendTo(row);
+            }
+
+            $('#discovered-gateways').on('change', function() {
+                var sid = $('#discovered-gateways').val();
+
+                $('#input-subdevices > *').remove();
+                var gateway = sid && RED.settings.miDevicesGatewayConfiguratorDiscoveredGateways.filter(function(e) { return e.sid == sid })[0];
+                $("#node-config-input-sid").val(gateway && gateway.sid);
+                $("#node-config-input-ip").val("");
+                $("#node-config-input-key").val("");
+
+                gateway && gateway.subdevices.forEach(function(device) {
+                    addSubdevice(device);
+                });
+            });
+
+            $.each(this.deviceList, function(sid, elt) {
+                addSubdevice({sid: sid, type: elt.type})
+            });
+        },
+        oneditsave: function() {
+            var node = this;
+            $('#input-subdevices > *').each(function(i, elt) {
+                var sid = $(elt).find('input[name=sid]').val();
+                var type = $(elt).find('input[name=type]').val();
+                var name = $(elt).find('#node-config-input-name-' + sid).val() || "";
+                node.deviceList[sid] = {type: type, name: name}; 
+            });
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="<%= NODES_PREFIX %>-gateway configurator">
+    <div class="form-row">
+        <label for="discovered-gateways"><i class="fa fa-search"></i> Found gateways</label>
+        <select id="discovered-gateways">
+            <option>- Select -</option>
+        </select>
+    </div>
+    <hr>
+    <h4>Gateway</h4>
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-ip"><i class="fa fa-compass"></i> IP</label>
+        <input type="text" id="node-config-input-ip" placeholder="IP">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-sid"><i class="fa fa-barcode"></i> SID</label>
+        <input type="text" id="node-config-input-sid" placeholder="sid">
+    </div>
+    <div class="form-row">
+        <label for="node-input-key"><i class="fa fa-key"></i> Key</label>
+        <input type="text" id="node-input-key" placeholder="Key">
+    </div>
+    <p>Note: use <code>ip</code> or <code>sid</code> - <code>sid</code> is better.</p>
+    <h4>Devices</h4>
+    <div id="input-subdevices"></div>
+</script>
+
+<script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-gateway configurator">
+    <p>Gateway configuration for Xiaomi nodes.</p>
+    <h3>Details</h3>
+    <p>This configuration node is used by the Xiaomi device nodes. Here you can add
+    devices with their device-id (SID), type and a description.</p>
+    <p>At the moment the following devices are supported:
+    <lu>
+        <li>Humidity & Temperature sensor [sensor ht/]</li>
+        <li>Body motion sensor [motion]</li>
+        <li>Magnet contact sensor [contact]</li>
+        <li>Wall socket plug (zigbee) [plug]</li>
+        <li>Push button [switch]</li>
+    </lu>
+    </p>
+    <p>To be able to receive messages from the Xiaomi gateway, you need to set the gateway
+    in developer mode. Once in developer mode, the gateway sends JSON messages over the network as
+    UDP packages. On the internet their are a lot of guides on how to put the gateway in developer mode.</p>
+    <p>If you want to use the wall sockets, you need to set the key from the gateway. The key can be
+    retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
+    together with the token from the gateway's heartbeat message to recalculate the key to switch
+    the plug. If you do not specify a key, the plug-node can not be used.</p>
+</script>

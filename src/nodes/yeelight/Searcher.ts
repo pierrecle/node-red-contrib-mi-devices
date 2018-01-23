@@ -2,6 +2,7 @@ import { Red } from "node-red";
 
 import * as YeelightSearch from 'yeelight-wifi';
 import { Constants } from "../constants";
+import { IYeelightConfiguratorNode } from "./YeelightConfigurator";
 
 export class Searcher {
     static _bulbs:any[] = [];
@@ -17,9 +18,9 @@ export class Searcher {
                 });
                 RED.nodes.eachNode((tmpNode) => {
                     if(tmpNode.type.indexOf(`${Constants.NODES_PREFIX}-yeelight configurator`) === 0) {
-                        let tmpNodeInst = <any> RED.nodes.getNode(tmpNode.id);
-                        if(tmpNodeInst.ip === bulb.hostname || tmpNodeInst.sid === parseInt(bulb.id)) {
-                            tmpNodeInst.setBulb(bulb);
+                        let tmpNodeInst = <IYeelightConfiguratorNode> RED.nodes.getNode(tmpNode.id);
+                        if(tmpNodeInst.ip == bulb.hostname || tmpNodeInst.sid == parseInt(bulb.id)) {
+                            tmpNodeInst.bulb = bulb;
                         }
                     }
                 });

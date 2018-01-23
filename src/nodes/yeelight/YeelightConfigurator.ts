@@ -1,8 +1,8 @@
-import { Red, NodeProperties, NodeStatus, ClearNodeStatus } from "node-red";
+import { Red, Node, NodeProperties, NodeStatus, ClearNodeStatus } from "node-red";
 import { Constants } from "../constants";
 import { Searcher } from "./Searcher";
 
-export interface IYeelightConfiguratorNode {
+export interface IYeelightConfiguratorNode extends Node {
     ip:string;
     sid:number;
     bulb:any;
