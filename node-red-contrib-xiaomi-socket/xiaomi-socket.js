@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const miDevicesUtils = require('../src/utils');
 
 module.exports = (RED) => {
     function XiaomiPlugNode(config) {
