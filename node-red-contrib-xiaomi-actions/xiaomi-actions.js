@@ -24,7 +24,7 @@ module.exports = (RED) => {
 
         this.on('input', (msg) => {
             msg.payload = { cmd: "get_id_list" };
-            node.send(msg);
+            this.send(msg);
         });
     }
     RED.nodes.registerType("xiaomi-actions get_id_list", XiaomiActionGetIdList);
