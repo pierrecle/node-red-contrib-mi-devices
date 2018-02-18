@@ -1,7 +1,6 @@
 # node-red-contrib-mi-devices
 
 This module contains the following nodes to provide easy integration of the Xiaomi devices into node-red.
-This module is a fork of [Harald Rietman module, node-red-contrib-xiaomi-devices](https://github.com/hrietman/node-red-contrib-xiaomi-devices)
 
 The following devices are currently supported:
 
@@ -15,9 +14,9 @@ The following devices are currently supported:
 * Power plug (zigbee)
 * Power plug (wifi)
 * Yeelight White (mono)
-* Yeelight RGB
+* Yeelight RGB (color)
 
-## Preperation
+## Preparation
 
 To interact with the gateway, you need to enable the developer mode, aka LAN mode in the gateway (see below).
 
@@ -29,6 +28,12 @@ Make sure to check his page for compatible devices.
 ```
 npm install node-red-contrib-mi-devices
 ```
+
+### Migrating from v1.X.X
+
+:warning: When I fully rewrote the code, it has been a need to move to other nodes types. So, there is no backward compatibility between 1.X.X and 2.X.X version (thsi is why a v2 has been released..). That also means that you will have to redo all the configurations add replace previous nodes to new ones, sorry for that.
+
+Last thing, before upgrading to v2, you should remove the previous version, to prevent node-red warn about missing nodes (or delete the `.config.json` file in your userDir, but you might also loose your credentials).
 
 ## Usage
 
@@ -89,11 +94,9 @@ The lightning icon should be underline un yellow.
 
 ## Sources
 
-* [Harald Rietman node-red module](https://github.com/hrietman/node-red-contrib-xiaomi-devices)
 * [Domoticz Instructions](https://www.domoticz.com/wiki/Xiaomi_Gateway_(Aqara))
 * [louisZl Gateway Local API](https://github.com/louisZL/lumi-gateway-local-api)
 * [Domoticz Gateway Code](https://github.com/domoticz/domoticz/blob/development/hardware/XiaomiGateway.cpp)
-* [Node-red UDP nodes](https://github.com/node-red/node-red/blob/master/nodes/core/io/32-udp.js)
 * [Yeelight specs](http://www.yeelight.com/download/Yeelight_Inter-Operation_Spec.pdf)
 
 ## Credits

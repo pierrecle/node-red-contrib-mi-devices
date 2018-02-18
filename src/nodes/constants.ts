@@ -1,3 +1,6 @@
 export class Constants {
-    static readonly NODES_PREFIX = "mi-devices";
+    static get NODES_PREFIX(){
+        let packageJson = require(`${__dirname}/../../package`);
+        return packageJson.config.nodes_prefix;
+    };
 }

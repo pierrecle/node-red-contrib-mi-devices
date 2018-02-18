@@ -1,4 +1,6 @@
-*.iml
+.DS_Store
+.idea
+dist/
 /node_modules
 .log
 package-lock.json

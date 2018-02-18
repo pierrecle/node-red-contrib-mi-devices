@@ -1,18 +1,21 @@
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-ht', {
+    RED.nodes.registerType('<%= NODES_PREFIX %>-plug', {
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
+            gateway: {value:"", type:"<%= NODES_PREFIX %>-gateway configurator"},
             name: {value: ""},
-            sid: {value: "", required: true}
+            sid: {value: "", required: true},
+            onmsg: {value: ""},
+            offmsg: {value: ""},
+            output: {value: "0"}
         },
         inputs: 1,
         outputs: 1,
-        paletteLabel: "sensor HT",
-        icon: "thermometer-icon.png",
+        paletteLabel: "plug (zigbee)",
+        icon: "outlet-icon.png",
         label: function () {
-            return this.name || "xiaomi-ht";
+            return this.name || "xiaomi-plug";
         },
         oneditprepare: function() {
             var node = this;
@@ -46,7 +49,7 @@
                 }
             });
             $("#node-input-gateway").change(function () {
-                changeGateway("sensor_ht");
+                changeGateway("plug");
             });
         },
         oneditsave: function() {
@@ -56,7 +59,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="xiaomi-ht">
+<script type="text/x-red" data-template-name="<%= NODES_PREFIX %>-plug">
     <div class="form-row">
         <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
         <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
@@ -71,52 +74,53 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-ht">
-    <p>The Xiaomi Humidity & Temperature sensor node</p>
+<script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-plug">
+    <p>The Xiaomi plug (zigbee) node</p>
+
+    <p>This is the plug (socket) version which is attached to a Xiaomi gateway. The Wifi version is not yet supported.</p>
+    <p>To switch an output you need to specify the key of the gateway in the gateway configuration; without the key
+    no output can be switched. To retrieve the gateway key consult the Xiaomi Mi Home App.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>payload
-            <span class="property-type">object</span>
+            <span class="property-type">string | json</span>
         </dt>
-        <dd>
-            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
-            <hr>
-            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>.<br>
-            <hr>
-            Input Gateway node produces message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>.
-        </dd>
+        <dd>When the node is used as filter, gateway <code>plug</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>. Or <code>on</code> or <code>off</code>.</dd>
     </dl>
 
     <h3>Outputs</h3>
     <ol class="node-ports">
-        <dl class="message-properties">
-            <dt>payload <span class="property-type">object</span></dt>
-            <dd>Data from gateway when used as a filter (see below).</dd>
-            <dt>sid <span class="property-type">string</span></dt>
-            <dd>Device SID.</dd>
-            <dt>gateway <span class="property-type">object</span></dt>
-            <dd>The <code>xiaomi-configurator</code> object where the device is registred.</dd>
-        </dl>
+        <li>Status output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">string | json</span></dt>
+                <dd>raw data, value or template.</dd>
+            </dl>
+        </li>
+        <li>Control output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">json</span></dt>
+                <dd>Gateway <code>write_cmd</code> to switch the output on or off.</dd>
+            </dl>
+        </li>
     </ol>
 
     <h4>Details</h4>
-    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
-    <p>Sample payload from Aqara (which brings pressure):</p>
+    <p>The incoming json message is parsed if the type model is <code>plug</code> and
+     the <code>sid</code> matches the configured value for this device.</p>
+    <p>On the input you can send the string <code>on</code> to switch the plug on. To turn it off just send the string <code>off</code></p>
+    <p>Sample message:</p>
     <p><pre>{
-  cmd: "read_ack"
-  model: "weather.v1"
-  sid: "158d00010b7f1b"
-  short_id: 8451
+  cmd: "write_ack"
+  model: "plug"
+  sid: "158d00012f1fb5"
+  short_id: 47414
   data: {
-    voltage:3005,
-    temperature:23.25,
-    humidity:56.99,
-    pressure:981.26,
-    batteryLevel: 34
+    voltage:3600,
+    status:"off",
+    inuse:"0",
+    power_consumed:"4000",
+    load_power:"0"
   }
-}</pre>
-    Where <code>humidy</code> is in percents, <code>pressure</code> in hPa, <code>batteryLevel</code> is a computed percentage of remaining battery.
-    </p>
-
+}</pre></p>
 </script>

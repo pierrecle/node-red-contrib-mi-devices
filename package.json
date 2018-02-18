@@ -1,23 +1,28 @@
 {
   "name": "node-red-contrib-mi-devices",
-  "version": "1.1.0",
-  "description": "A set of nodes to control some of the popular Xiaomi sensors which are connected to the Xiaomi Gateway, and the Gateway itself.",
+  "version": "2.0.0",
+  "description": "A set of nodes to control some of the popular Xiaomi sensors which are connected to the Xiaomi Gateway, the Gateway itself and Yeelights.",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com:pierrecle/node-red-contrib-mi-devices.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "config": {
+    "nodes_prefix": "mi-devices"
   },
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && npm run build:ts && npm run build:ejs && npm run build:icons",
     "build:ts": "tsc --allowUnreachableCode -p .",
-    "build:ejs": "npm run build:ejs:indexes && npm run build:ejs:devices",
-    "build:ejs:indexes": "ejs-cli --base-dir src/ --options \"{\\\"NODES_PREFIX\\\": \\\"mi-devices\\\"}\" \"**/index.ejs\" --out dist/",
-    "build:ejs:devices": "ejs-cli --base-dir src/ --options \"{\\\"NODES_PREFIX\\\": \\\"mi-devices\\\"}\" \"nodes/devices/*.ejs\" --out dist/",
-    "build:icons": "npm run build:icons:gateway && npm run build:icons:devices && npm run build:icons:actions && npm run build:icons:yeelight",
+    "build:ejs": "ejs-cli --base-dir src/ --options \"{\\\"NODES_PREFIX\\\": \\\"${npm_package_config_nodes_prefix}\\\"}\" \"**/index.ejs\" --out dist/",
+    "build:icons": "npm run build:icons:gateway && npm run build:icons:gateway-subdevices && npm run build:icons:actions && npm run build:icons:yeelight",
     "build:icons:gateway": "cp -pr icons/gateway dist/nodes/gateway/icons",
-    "build:icons:devices": "cp -pr icons/devices dist/nodes/devices/icons",
+    "build:icons:gateway-subdevices": "cp -pr icons/gateway-subdevices dist/nodes/gateway-subdevices/icons",
     "build:icons:actions": "cp -pr icons/actions dist/nodes/actions/icons",
-    "build:icons:yeelight": "cp -pr icons/yeelight dist/nodes/yeelight/icons"
+    "build:icons:yeelight": "cp -pr icons/yeelight dist/nodes/yeelight/icons",
+    "build:icons:plug-wifi": "cp -pr icons/plug-wifi dist/nodes/plug-wifi/icons"
   },
   "license": "MIT",
   "keywords": [
@@ -28,16 +33,11 @@
   ],
   "node-red": {
     "nodes": {
-      "xiaomi-ht": "dist/nodes/devices/Sensor.js",
-      "xiaomi-magnet": "dist/nodes/devices/Magnet.js",
-      "xiaomi-motion": "dist/nodes/devices/Motion.js",
-      "xiaomi-switch": "dist/nodes/devices/Switch.js",
-      "xiaomi-socket": "node-red-contrib-xiaomi-socket/xiaomi-socket.js",
-      "xiaomi-socket-wifi": "node-red-contrib-xiaomi-socket-wifi/xiaomi-socket-wifi.js",
-      "xiaomi-all": "dist/nodes/devices/All.js",
-      "xiaomi-gateway": "dist/nodes/gateway/index.js",
-      "xiaomi-actions": "node-red-contrib-xiaomi-actions/xiaomi-actions.js",
-      "xiaomi-yeelight": "dist/nodes/yeelight/index.js"
+      "mi-devices-gateway": "dist/nodes/gateway/index.js",
+      "mi-devices-gateway-subdevices": "dist/nodes/gateway-subdevices/index.js",
+      "mi-devices-plug-wifi": "dist/nodes/plug-wifi/index.js",
+      "mi-devices-yeelight": "dist/nodes/yeelight/index.js",
+      "mi-devices-actions": "dist/nodes/actions/index.js"
     }
   },
   "author": "Pierre CLEMENT",
@@ -47,7 +47,7 @@
   "dependencies": {
     "cryptojs": "^2.5.3",
     "lumi-aqara": "^1.4.0",
-    "miio": "^0.14.1",
+    "miio": "^0.15.2",
     "yeelight-wifi": "^2.3.0"
   },
   "engines": {

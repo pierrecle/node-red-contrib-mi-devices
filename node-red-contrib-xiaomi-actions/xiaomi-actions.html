@@ -1,179 +1,9 @@
-<!--  The Read Node  -->
-<script type="text/x-red" data-template-name="xiaomi-actions read">
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
 
-<script type="text/x-red" data-help-name="xiaomi-actions read">
-    <p>Ask the gateway to read the report of the input device.</p>
-
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>sid
-            <span class="property-type">string</span>
-        </dt>
-        <dd>Device <code>sid</code> to ask the report.</dd>
-    </dl>
-
-    <h3>Outputs</h3>
-    <p class="node-ports">
-        Message to connect to a gateway out node.
-    </p>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions read',{
-        category: 'xiaomi actions',
-        color: '#64C4CD',
-        defaults: {
-            name: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        paletteLabel: "read",
-        icon: "mi-read.png",
-        label: function() {
-            return this.name||"read";
-        }
-    });
-</script>
-
-
-<!--  The get ids Node  -->
-<script type="text/x-red" data-template-name="xiaomi-actions get_id_list">
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="xiaomi-actions get_id_list">
-    <p>Ask the gateway to the list of devices ids.</p>
-
-    <h3>Outputs</h3>
-    <ol class="node-ports">
-        <li>Message to connect to a gateway out node.</li>
-    </ol>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions get_id_list',{
-        category: 'xiaomi actions',
-        color: '#64C4CD',
-        defaults: {
-            name: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        paletteLabel: "get id list",
-        icon: "mi-list.png",
-        label: function() {
-            return this.name||"get id list";
-        }
-    });
-</script>
-
-
-
-<!--  The Single click Node  -->
-<script type="text/x-red" data-template-name="xiaomi-actions click">
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="xiaomi-actions click">
-    <p>Virtual single click for switch.</p>
-
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>sid
-            <span class="property-type">string</span>
-        </dt>
-        <dd>Device <code>sid</code> to ask the report.</dd>
-        <dt>gateway
-            <span class="property-type">xiaomi-configurator</span>
-        </dt>
-        <dd>Device <code>sid</code> to ask the report.</dd>
-    </dl>
-
-    <h3>Outputs</h3>
-    <ol class="node-ports">
-        <li>Message to connect to a gateway out node.</li>
-    </ol>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions click',{
-        category: 'xiaomi actions',
-        color: '#64C4CD',
-        defaults: {
-            name: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        paletteLabel: "click",
-        icon: "mi-click.png",
-        label: function() {
-            return this.name||"click";
-        }
-    });
-</script>
-
-
-<!--  The Double click Node  -->
-<script type="text/x-red" data-template-name="xiaomi-actions double_click">
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="xiaomi-actions double_click">
-    <p>Virtual double click for switch.</p>
-
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>sid
-            <span class="property-type">string</span>
-        </dt>
-        <dd>Device <code>sid</code> to ask the report.</dd>
-        <dt>gateway
-            <span class="property-type">xiaomi-configurator</span>
-        </dt>
-        <dd>Device <code>sid</code> to ask the report.</dd>
-    </dl>
-
-    <h3>Outputs</h3>
-    <ol class="node-ports">
-        <li>Message to connect to a gateway out node.</li>
-    </ol>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions double_click',{
-        category: 'xiaomi actions',
-        color: '#64C4CD',
-        defaults: {
-            name: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        paletteLabel: "double click",
-        icon: "mi-double-click.png",
-        label: function() {
-            return this.name||"double click";
-        }
-    });
-</script>
 
 
 <!--  The Gateway light Node  -->
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions gateway_light', {
+    RED.nodes.registerType('mi-devices-actions gateway_light', {
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
@@ -203,7 +33,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="xiaomi-actions gateway_light">
+<script type="text/x-red" data-template-name="mi-devices-actions gateway_light">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -218,7 +48,7 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-actions gateway_light">
+<script type="text/x-red" data-help-name="mi-devices-actions gateway_light">
     <p>Change the light of the gateway.</p>
 
     <h3>Inputs</h3>
@@ -254,7 +84,7 @@
 
 <!--  The Gateway sound Node  -->
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions gateway_sound', {
+    RED.nodes.registerType('mi-devices-actions gateway_sound', {
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
@@ -272,7 +102,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="xiaomi-actions gateway_sound">
+<script type="text/x-red" data-template-name="mi-devices-actions gateway_sound">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -311,7 +141,7 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-actions gateway_sound">
+<script type="text/x-red" data-help-name="mi-devices-actions gateway_sound">
     <p>Play a sound on the gateway.</p>
 
     <h3>Inputs</h3>
@@ -335,7 +165,7 @@
 
 <!--  The Gateway stop sound Node  -->
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions gateway_stop_sound',{
+    RED.nodes.registerType('mi-devices-actions gateway_stop_sound',{
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
@@ -350,14 +180,14 @@
         }
     });
 </script>
-<script type="text/x-red" data-template-name="xiaomi-actions gateway_stop_sound">
+<script type="text/x-red" data-template-name="mi-devices-actions gateway_stop_sound">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-actions gateway_stop_sound">
+<script type="text/x-red" data-help-name="mi-devices-actions gateway_stop_sound">
     <p>
         Stop current playing sound on the gateway.
     </p>
@@ -371,7 +201,7 @@
 
 <!--  The "on" Node  -->
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions on',{
+    RED.nodes.registerType('mi-devices-actions on',{
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
@@ -386,14 +216,14 @@
         }
     });
 </script>
-<script type="text/x-red" data-template-name="xiaomi-actions on">
+<script type="text/x-red" data-template-name="mi-devices-actions on">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-actions on">
+<script type="text/x-red" data-help-name="mi-devices-actions on">
     <p>
         Turn input device to on.
     </p>
@@ -407,7 +237,7 @@
 
 <!--  The "off" Node  -->
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions off',{
+    RED.nodes.registerType('mi-devices-actions off',{
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
@@ -422,14 +252,14 @@
         }
     });
 </script>
-<script type="text/x-red" data-template-name="xiaomi-actions off">
+<script type="text/x-red" data-template-name="mi-devices-actions off">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-actions off">
+<script type="text/x-red" data-help-name="mi-devices-actions off">
     <p>
         Turn input device to off.
     </p>
@@ -443,7 +273,7 @@
 
 <!--  The "toggle" Node  -->
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-actions toggle',{
+    RED.nodes.registerType('mi-devices-actions toggle',{
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
@@ -458,14 +288,14 @@
         }
     });
 </script>
-<script type="text/x-red" data-template-name="xiaomi-actions toggle">
+<script type="text/x-red" data-template-name="mi-devices-actions toggle">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-actions toggle">
+<script type="text/x-red" data-help-name="mi-devices-actions toggle">
     <p>Toggle device.</p>
 
     <h3>Outputs</h3>

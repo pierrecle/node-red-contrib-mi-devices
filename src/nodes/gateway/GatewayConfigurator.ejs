@@ -3,64 +3,105 @@
         category: 'config',
         defaults: {
             name: {value: ""},
-            ip: {value: ""},
             sid: {value: ""},
+            key: { value: "" },
             deviceList: {value:{}}
-        },
-        credentials: {
-            key: { type: "text" }
         },
         paletteLabel: "gateway configurator",
         label: function () {
             return this.name || "gateway configurator";
         },
         oneditprepare: function() {
-            RED.settings.miDevicesGatewayConfiguratorDiscoveredGateways.forEach(function(gateway, index) {
+            var foundGateways = RED.settings.miDevicesGatewayConfiguratorDiscoveredGateways;
+            Object.keys(foundGateways).forEach(function(sid) {
+                var gateway = foundGateways[sid];
                 $('#discovered-gateways').append('<option value="' + gateway.sid + '">' + gateway.sid + ' - ' + gateway.ip + '</option>');
             });
             var node = this;
 
-            function addSubdevice(device) {
-                var devicesConfig = {
-                    "sensor": {value:"sensor", label:"sensor ht", icon:"icons/node-red-contrib-mi-devices/thermometer-icon.png"},
-                    "magnet": {value:"magnet", label:"magnet", icon:"icons/node-red-contrib-mi-devices/door-icon.png"},
-                    "motion": {value:"motion", label:"motion", icon:"icons/node-red-contrib-mi-devices/motion-icon.png"},
-                    "switch": {value:"switch", label:"switch", icon:"icons/node-red-contrib-mi-devices/mi-switch.png"},
-                    "plug": {value:"plug", label:"plug zigbee", icon:"icons/node-red-contrib-mi-devices/outlet-icon.png"}
-                };
+            var devicesConfig = {
+                "mi.weather": {label:"weather", icon:"icons/node-red-contrib-mi-devices/thermometer-icon.png"},
+                "mi.magnet": {label:"magnet", icon:"icons/node-red-contrib-mi-devices/door-icon.png"},
+                "mi.motion": {label:"motion", icon:"icons/node-red-contrib-mi-devices/motion-icon.png"},
+                "mi.switch": {label:"switch", icon:"icons/node-red-contrib-mi-devices/mi-switch.png"},
+                "mi.plug": {label:"plug zigbee", icon:"icons/node-red-contrib-mi-devices/outlet-icon.png"}
+            };
 
-                var row = $('<div/>', {class: "form-row"}).appendTo($('#input-subdevices'));
-                $('<input/>', {value: device.sid, type: "hidden", name: "sid"}).appendTo(row);
-                $('<input/>', {value: device.type, type: "hidden", name: "type"}).appendTo(row);
-                $('<label/>', {for: "node-config-input-name-" + device.sid}).html('<img src="' + devicesConfig[device.type].icon + '" style="width:24px;height:24px;filter:contrast(0);"> ' + device.sid).appendTo(row);
-                $('<input/>', {id: "node-config-input-name-" + device.sid, type: "text", value: (node.deviceList && node.deviceList[device.sid].name) || devicesConfig[device.type].label}).appendTo(row);
-            }
+            $("#node-config-input-subdevices").css('min-height','250px').css('min-width','450px').editableList({
+                addItem: function(container, i, device) {
+                    var row = container;
+                    $('<label/>',{for:"node-config-input-sid-"+i, style:"margin-left: 3px; width: 15px;vertical-align:middle"}).appendTo(row);
+                    var sid = $('<input/>',{id:"node-config-input-sid-"+i,type:"text", placeholder:"SID", style:"width:auto;vertical-align:top"}).appendTo(row);
+                    sid.typedInput({
+                        default: 'weather',
+                        types: Object.keys(devicesConfig).map(function(type) {
+                            var cleanType = devicesConfig[type];
+                            cleanType.value = type;
+                            return cleanType;
+                        })
+                    });
+                    $('<label/>',{for:"node-config-input-desc-"+i, style:"margin-left: 7px; width: 20px;vertical-align:middle"}).html('<i class="fa fa-pencil-square-o"></i>').appendTo(row);
+                    var desc = $('<input/>',{id:"node-config-input-desc-"+i, type:"text", placeholder:"name", style:"width:auto;vertical-align:top"}).appendTo(row);
+                    sid.typedInput('value', device.sid);
+                    sid.typedInput('type', device.internalModel);
+                    desc.val(device.name);
+                    container.parent().attr("data-sid", device.sid);
+                },
+                removeItem: function(device) {
+                    $("#node-config-input-subdevices").find("[data-sid=" + device.sid + "]").remove();
+                },
+                sortable: false,
+                removable: true
+            });
 
             $('#discovered-gateways').on('change', function() {
                 var sid = $('#discovered-gateways').val();
 
                 $('#input-subdevices > *').remove();
-                var gateway = sid && RED.settings.miDevicesGatewayConfiguratorDiscoveredGateways.filter(function(e) { return e.sid == sid })[0];
+                var gateway = sid && RED.settings.miDevicesGatewayConfiguratorDiscoveredGateways[sid];
                 $("#node-config-input-sid").val(gateway && gateway.sid);
-                $("#node-config-input-ip").val("");
-                $("#node-config-input-key").val("");
+                $("#node-config-input-key").val(gateway && gateway.key);
 
-                gateway && gateway.subdevices.forEach(function(device) {
-                    addSubdevice(device);
+                $("#node-config-input-subdevices").editableList('items').each(function(i, elt) {
+                    $("#node-config-input-subdevices").editableList('removeItem', {sid: $(elt).find("#node-config-input-sid-"+i).val()});
+                });
+                var subdevices = gateway && Object.keys(gateway.subdevices).map(function(sid) { return gateway.subdevices[sid]; });
+                subdevices && subdevices.sort(function(a, b) { return a.internalModel > b.internalModel; }).forEach(function(device) {
+                    console.log(device);
+                    if(!devicesConfig[device.internalModel] || !device.sid) {
+                        return;
+                    }
+                    if(node.deviceList[device.sid]) {
+                        device.name = node.deviceList[device.sid].name;
+                    }
+                    $("#node-config-input-subdevices").editableList('addItem', device);
+                });
+                var listHeight = $("#node-config-input-subdevices").editableList('items').size() * 51 + 50;
+                $("#node-config-input-subdevices").editableList('height', listHeight);
+            });
+
+            Object.keys(this.deviceList || {}).forEach(function(sid) {
+                var device = node.deviceList[sid];
+                $("#node-config-input-subdevices").editableList('addItem', {
+                    sid: sid,
+                    type: device.internalModel,
+                    name: device.name
                 });
             });
 
-            $.each(this.deviceList, function(sid, elt) {
-                addSubdevice({sid: sid, type: elt.type})
-            });
+            var listHeight = $("#node-config-input-subdevices").editableList('items').size() * 51 + 50;
+            $("#node-config-input-subdevices").editableList('height', listHeight);
         },
         oneditsave: function() {
             var node = this;
-            $('#input-subdevices > *').each(function(i, elt) {
-                var sid = $(elt).find('input[name=sid]').val();
-                var type = $(elt).find('input[name=type]').val();
-                var name = $(elt).find('#node-config-input-name-' + sid).val() || "";
-                node.deviceList[sid] = {type: type, name: name}; 
+            var devices = $("#node-config-input-subdevices").editableList('items');
+
+            devices.each(function(i, elt) {
+                var deviceElement = $(elt);
+                var sid = deviceElement.find("#node-config-input-sid-"+i).val();
+                var desc = deviceElement.find("#node-config-input-desc-"+i).val();
+                var model = deviceElement.find("#node-config-input-sid-"+i).typedInput('type');
+                node.deviceList[sid] = {type: model, name: desc};
             });
         }
     });
@@ -80,20 +121,17 @@
         <input type="text" id="node-config-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-config-input-ip"><i class="fa fa-compass"></i> IP</label>
-        <input type="text" id="node-config-input-ip" placeholder="IP">
-    </div>
-    <div class="form-row">
         <label for="node-config-input-sid"><i class="fa fa-barcode"></i> SID</label>
         <input type="text" id="node-config-input-sid" placeholder="sid">
     </div>
     <div class="form-row">
-        <label for="node-input-key"><i class="fa fa-key"></i> Key</label>
-        <input type="text" id="node-input-key" placeholder="Key">
+        <label for="node-input-gatewayKey"><i class="fa fa-key"></i> Key</label>
+        <input type="text" id="node-config-input-key" placeholder="Key">
     </div>
-    <p>Note: use <code>ip</code> or <code>sid</code> - <code>sid</code> is better.</p>
     <h4>Devices</h4>
-    <div id="input-subdevices"></div>
+    <div class="form-row node-config-input-subdevices">
+        <ol id="node-config-input-subdevices"></ol>
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-gateway configurator">

@@ -1,0 +1,33 @@
+<%# ---------------------------------- read ----------------------------------  %>
+<%- include('./Action', { 
+    type: "read",
+    label: "read",
+    icon: "mi-read",
+    docTitle: "Ask the gateway to read the report of the input device."
+}) %>
+
+<%# ---------------------------------- get_id_list ----------------------------------  %>
+<%- include('./Action', { 
+    type: "get_id_list",
+    label: "get id list",
+    icon: "mi-list",
+    docTitle: "Ask the gateway to the list of devices ids."
+}) %>
+
+<%# ---------------------------------- click ----------------------------------  %>
+<%- include('./Action', { 
+    type: "click",
+    label: "click",
+    icon: "mi-click",
+    docTitle: "Virtual single click for switch."
+}) %>
+
+<%# ---------------------------------- double_click ----------------------------------  %>
+<%- include('./Action', { 
+    type: "double_click",
+    label: "double click",
+    icon: "double-click",
+    docTitle: "Virtual double click for switch."
+}) %>
+
+<%- include('./GatewayLight', {}) %>

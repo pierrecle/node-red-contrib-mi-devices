@@ -1,0 +1,85 @@
+<%- include('./All', {}); %>
+<%- include('./Plug', {}); %>
+
+<%# ---------------------------------- Magnet ----------------------------------  %>
+<%- include('./GatewaySubdevice', { 
+    type: "magnet",
+    label: "contact",
+    icon: "door-icon",
+    filterType: "magnet",
+    docTitle: "The Xiaomi contact",
+    incomingSample: `{
+  cmd: "read_ack"
+  model: "sensor_magnet.aq2"
+  sid: "158d000112fb5d"
+  short_id: 50301
+  data: {
+    voltage: 3015,
+    status: "close",
+    batteryLevel: 23
+  }
+}`,
+    incomingDetails: `<code>status</code> can be <code>"open"</code> or <code>"close"</code>`
+}) %>
+
+<%# ---------------------------------- Motion ----------------------------------  %>
+<%- include('./GatewaySubdevice', { 
+    type: "motion",
+    label: "motion",
+    icon: "motion-icon",
+    filterType: "motion",
+    docTitle: "The Xiaomi body motion",
+    incomingSample: `{
+  cmd: "read_ack"
+  model: "motion"
+  sid: "158d00015ef56c"
+  short_id: 21672
+  data: {
+    voltage: 3035,
+    status: "motion",
+    batteryLevel: 45
+  }
+}`
+}) %>
+
+<%# ---------------------------------- Sensor HT ----------------------------------  %>
+<%- include('./GatewaySubdevice', { 
+    type: "ht",
+    label: "sensor HT",
+    icon: "thermometer-icon",
+    filterType: "sensor_ht",
+    docTitle: "The Xiaomi Humidity & Temperature",
+    incomingSample: `{
+  cmd: "read_ack"
+  model: "weather.v1"
+  sid: "158d00010b7f1b"
+  short_id: 8451
+  data: {
+    voltage:3005,
+    temperature:23.25,
+    humidity:56.99,
+    pressure:981.26,
+    batteryLevel: 34
+  }
+}`,
+    incomingDetails: `<code>humidy</code> is in percents, <code>pressure</code> in kPa`
+}) %>
+
+<%# ---------------------------------- Switch ----------------------------------  %>
+<%- include('./GatewaySubdevice', { 
+    type: "switch",
+    label: "switch",
+    icon: "mi-switch",
+    filterType: "switch",
+    docTitle: "The Xiaomi Switch",
+    incomingSample: `{
+  cmd: "report"
+  model: "switch"
+  sid: "158d000128b124"
+  short_id: 56773
+  data: {
+    status: "click",
+    batteryLevel: 23
+  }
+}`
+}) %>

@@ -14,7 +14,7 @@ module.exports = (RED) => {
             }
         });
     }
-    RED.nodes.registerType("xiaomi-actions read", XiaomiActionRead);
+    RED.nodes.registerType("mi-devices-actions read", XiaomiActionRead);
 
     /*********************************************
      Get registred ids of devices on gateway
@@ -27,7 +27,7 @@ module.exports = (RED) => {
             node.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions get_id_list", XiaomiActionGetIdList);
+    RED.nodes.registerType("mi-devices-actions get_id_list", XiaomiActionGetIdList);
 
     /*********************************************
      Virtual single click on a button
@@ -43,7 +43,7 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions click", XiaomiActionSingleClick);
+    RED.nodes.registerType("mi-devices-actions click", XiaomiActionSingleClick);
 
     /*********************************************
      Virtual Double click on a button
@@ -59,7 +59,7 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions double_click", XiaomiActionDoubleClick);
+    RED.nodes.registerType("mi-devices-actions double_click", XiaomiActionDoubleClick);
 
     /*********************************************
      Set the gateway light
@@ -88,7 +88,7 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions gateway_light", XiaomiActionGatewayLight);
+    RED.nodes.registerType("mi-devices-actions gateway_light", XiaomiActionGatewayLight);
 
     /*********************************************
      Play a sound on the gateway
@@ -110,7 +110,7 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions gateway_sound", XiaomiActionGatewaySound);
+    RED.nodes.registerType("mi-devices-actions gateway_sound", XiaomiActionGatewaySound);
 
     /*********************************************
      Stop playing a sound on the gateway
@@ -126,7 +126,7 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions gateway_stop_sound", XiaomiActionGatewayStopSound);
+    RED.nodes.registerType("mi-devices-actions gateway_stop_sound", XiaomiActionGatewayStopSound);
 
     /*********************************************
      Turn device on
@@ -147,7 +147,7 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions on", XiaomiActionPowerOn);
+    RED.nodes.registerType("mi-devices-actions on", XiaomiActionPowerOn);
 
     /*********************************************
      Turn device off
@@ -168,7 +168,7 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions off", XiaomiActionPowerOff);
+    RED.nodes.registerType("mi-devices-actions off", XiaomiActionPowerOff);
 
     /*********************************************
      Toggle device
@@ -181,5 +181,5 @@ module.exports = (RED) => {
             this.send(msg);
         });
     }
-    RED.nodes.registerType("xiaomi-actions toggle", XiaomiActionToggle);
+    RED.nodes.registerType("mi-devices-actions toggle", XiaomiActionToggle);
 }

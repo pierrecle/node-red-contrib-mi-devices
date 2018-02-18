@@ -1,0 +1,67 @@
+<script type="text/javascript">
+    RED.nodes.registerType('<%= NODES_PREFIX %>-plug-wifi', {
+        category: 'xiaomi',
+        color: '#3FADB5',
+        defaults: {
+            name: {value: ""},
+            ip: {value: "", required: true},
+            onmsg: {value: ""},
+            offmsg: {value: ""},
+            output: {value: "0"}
+        },
+        inputs: 1,
+        outputs: 1,
+        outputLabels: ["Status"],
+        paletteLabel: "plug (wifi)",
+        icon: "outlet-wifi-icon.png",
+        label: function () {
+            return this.name || "plug-wifi";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="<%= NODES_PREFIX %>-plug-wifi">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ip"><i class="icon-tag"></i> Ip</label>
+        <input type="text" id="node-input-ip" placeholder="ip address">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-plug-wifi">
+    <p>The Xiaomi plug (wifi) node</p>
+
+    <p>This is the wiFi plug (socket). To control the Wifi-Plug, extensive use is made of the miio library created by <a href="https://github.com/aholstenson/miio">Andreas Holstenson</a>. Make sure to check his page for compatible devices.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string</span>
+        </dt>
+        <dd><code>on</code> or <code>off</code>.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway, see below.</dd>
+        </dl>
+    </ol>
+
+    <h4>Details</h4>
+    <p>On the input you can send the string <code>on</code> to switch the plug on. To turn it off just send the string <code>off</code></p>
+    <p>Sample message full data:</p>
+    <p><pre>{
+  type: "power-plug",
+  model: "chuangmi.plug.m1",
+  capabilities: [ {"0": "power-channels"} ],
+  address: "192.168.178.31",
+  port: 54321,
+  power: { "0": false },
+  state: "on"
+}</pre></p>
+</script>
