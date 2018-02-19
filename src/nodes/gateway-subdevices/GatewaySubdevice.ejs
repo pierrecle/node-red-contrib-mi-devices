@@ -30,7 +30,7 @@
                         for (sid in configNode.deviceList) {
                             var device = configNode.deviceList[sid];
                             if (device.internalModel === model) {
-                                $('#node-input-sid').append('<option value="' + sid + '">' + device.desc + ' - ' + sid + '</option>');
+                                $('#node-input-sid').append('<option value="' + sid + '">' + device.name + ' - ' + sid + '</option>');
                             }
                         }
                         if(node.sid) {
