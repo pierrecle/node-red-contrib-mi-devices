@@ -9,6 +9,7 @@ export default (RED:Red, type:string) => {
         constructor(props:NodeProperties) {
             RED.nodes.createNode(<any> this, props);
             this.gateway = RED.nodes.getNode((<any> props).gateway);
+            this.sid = (<any> props).sid;
     
             (<any> this).status({fill:"grey", shape:"ring", text:"battery - na"});
     
@@ -19,7 +20,7 @@ export default (RED:Red, type:string) => {
                     // Input from gateway
                     if (payload.sid) {
                         if (payload.sid == this.sid) {
-                            let batteryLevel = payload.getBatteryPercentage();
+                            let batteryLevel = payload.batteryLevel;
                             var status:NodeStatus = {
                                 fill: "green", shape: "dot",
                                 text: "battery - " + batteryLevel + "%"
