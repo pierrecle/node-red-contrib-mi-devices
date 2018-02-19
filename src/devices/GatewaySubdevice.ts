@@ -20,7 +20,9 @@ export abstract class GatewaySubdevice extends events.EventEmitter {
     }
 
     handleMessage(msg: GatewayMessage): void {
-        this.voltage = (<GatewayMessageDefaultSubdeviceData> msg.data).voltage;
+        if ((<GatewayMessageDefaultSubdeviceData> msg.data).voltage) {
+            this.voltage = (<GatewayMessageDefaultSubdeviceData> msg.data).voltage;
+        }
         this.message = msg;
     }
 
@@ -31,8 +33,8 @@ export abstract class GatewaySubdevice extends events.EventEmitter {
     abstract get internalModel(): string;
 
     toJSON() {
-        let json:any = {};
-        for(let prop of Object.keys(this)) {
+        let json: any = {};
+        for (let prop of Object.keys(this)) {
             json[prop] = this[prop];
         }
         delete json._events;

@@ -4,13 +4,13 @@
 <%# ---------------------------------- Magnet ----------------------------------  %>
 <%- include('./GatewaySubdevice', { 
     type: "magnet",
-    label: "contact",
+    label: "magnet",
     icon: "door-icon",
-    filterType: "magnet",
+    filterType: "mi.magnet",
     docTitle: "The Xiaomi contact",
     incomingSample: `{
   cmd: "read_ack"
-  model: "sensor_magnet.aq2"
+  model: "magnet"
   sid: "158d000112fb5d"
   short_id: 50301
   data: {
@@ -24,10 +24,10 @@
 
 <%# ---------------------------------- Motion ----------------------------------  %>
 <%- include('./GatewaySubdevice', { 
-    type: "motion",
+    type: "mi.motion",
     label: "motion",
     icon: "motion-icon",
-    filterType: "motion",
+    filterType: "mi.motion",
     docTitle: "The Xiaomi body motion",
     incomingSample: `{
   cmd: "read_ack"
@@ -44,10 +44,10 @@
 
 <%# ---------------------------------- Sensor HT ----------------------------------  %>
 <%- include('./GatewaySubdevice', { 
-    type: "ht",
-    label: "sensor HT",
+    type: "mi.weather",
+    label: "weather",
     icon: "thermometer-icon",
-    filterType: "sensor_ht",
+    filterType: "mi.weather",
     docTitle: "The Xiaomi Humidity & Temperature",
     incomingSample: `{
   cmd: "read_ack"
@@ -67,10 +67,10 @@
 
 <%# ---------------------------------- Switch ----------------------------------  %>
 <%- include('./GatewaySubdevice', { 
-    type: "switch",
+    type: "mi.switch",
     label: "switch",
     icon: "mi-switch",
-    filterType: "switch",
+    filterType: "mi.switch",
     docTitle: "The Xiaomi Switch",
     incomingSample: `{
   cmd: "report"

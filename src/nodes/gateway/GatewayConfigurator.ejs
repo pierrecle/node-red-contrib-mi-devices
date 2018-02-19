@@ -33,7 +33,7 @@
                     $('<label/>',{for:"node-config-input-sid-"+i, style:"margin-left: 3px; width: 15px;vertical-align:middle"}).appendTo(row);
                     var sid = $('<input/>',{id:"node-config-input-sid-"+i,type:"text", placeholder:"SID", style:"width:auto;vertical-align:top"}).appendTo(row);
                     sid.typedInput({
-                        default: 'weather',
+                        default: 'mi.weather',
                         types: Object.keys(devicesConfig).map(function(type) {
                             var cleanType = devicesConfig[type];
                             cleanType.value = type;
@@ -67,14 +67,17 @@
                 });
                 var subdevices = gateway && Object.keys(gateway.subdevices).map(function(sid) { return gateway.subdevices[sid]; });
                 subdevices && subdevices.sort(function(a, b) { return a.internalModel > b.internalModel; }).forEach(function(device) {
-                    console.log(device);
                     if(!devicesConfig[device.internalModel] || !device.sid) {
                         return;
                     }
                     if(node.deviceList[device.sid]) {
                         device.name = node.deviceList[device.sid].name;
                     }
-                    $("#node-config-input-subdevices").editableList('addItem', device);
+                    $("#node-config-input-subdevices").editableList('addItem', {
+                        sid: device.sid,
+                        internalModel: device.internalModel,
+                        name: device.name
+                    });
                 });
                 var listHeight = $("#node-config-input-subdevices").editableList('items').size() * 51 + 50;
                 $("#node-config-input-subdevices").editableList('height', listHeight);
@@ -84,7 +87,7 @@
                 var device = node.deviceList[sid];
                 $("#node-config-input-subdevices").editableList('addItem', {
                     sid: sid,
-                    type: device.internalModel,
+                    internalModel: device.internalModel,
                     name: device.name
                 });
             });
@@ -100,8 +103,8 @@
                 var deviceElement = $(elt);
                 var sid = deviceElement.find("#node-config-input-sid-"+i).val();
                 var desc = deviceElement.find("#node-config-input-desc-"+i).val();
-                var model = deviceElement.find("#node-config-input-sid-"+i).typedInput('type');
-                node.deviceList[sid] = {type: model, name: desc};
+                var internalModel = deviceElement.find("#node-config-input-sid-"+i).typedInput('type');
+                node.deviceList[sid] = {internalModel: internalModel, name: desc};
             });
         }
     });

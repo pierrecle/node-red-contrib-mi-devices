@@ -25,13 +25,12 @@
                 var configNodeID = $('#node-input-gateway').val();
                 if (configNodeID) {
                     var configNode = RED.nodes.node(configNodeID);
-                    console.log(model, configNode);
                     if(configNode) {
                         $('#node-input-sid').empty();
-                        for (key in configNode.deviceList) {
-                            var device = configNode.deviceList[key];
-                            if (device.type === model) {
-                                $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + ' - ' + device.sid + '</option>');
+                        for (sid in configNode.deviceList) {
+                            var device = configNode.deviceList[sid];
+                            if (device.internalModel === model) {
+                                $('#node-input-sid').append('<option value="' + sid + '">' + device.desc + ' - ' + sid + '</option>');
                             }
                         }
                         if(node.sid) {

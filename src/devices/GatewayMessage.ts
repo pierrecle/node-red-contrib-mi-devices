@@ -25,6 +25,7 @@ export class GatewayMessage {
         | MessageData.GatewayMessageReadAckReportWeatherData
         | MessageData.GatewayMessageDefaultSubdeviceData
         | any;
+    timestamp: number;
 
     constructor(raw: GatewayRawMessage) {
         Object.assign(this, raw);
@@ -34,6 +35,7 @@ export class GatewayMessage {
         if (raw.data) {
             this.data = JSON.parse(raw.data) || raw.data;
         }
+        this.timestamp = +new Date;
     }
 
     isHeartbeat(): boolean {
