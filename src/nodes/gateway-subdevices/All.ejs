@@ -3,7 +3,7 @@
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
-            gateway: {value:"", type:"<%= NODES_PREFIX %>-configurator"},
+            gateway: {value:"", type:"<%= NODES_PREFIX %>-gateway configurator"},
             name: {value: ""},
             onlyModels: {value: []},
             excludedSids: { value: []}
@@ -35,11 +35,11 @@
                         onlyModels = getOnlyModelsValue(onlyModels || $('#node-input-onlyModels').val() || []);
                         excludedSids = excludedSids || $('#node-input-excludedSids').val() || [];
                         $('#node-input-excludedSids').empty();
-                        for (key in configNode.deviceList) {
-                            var device = configNode.deviceList[key];
-                            if (onlyModels.length == 0 || onlyModels.indexOf(device.model) >= 0) {
-                                var option = $('<option value="' + device.sid + '">' + device.desc + '</option>');
-                                if(excludedSids && excludedSids.indexOf(device.sid) >= 0) {
+                        for (sid in configNode.deviceList) {
+                            var device = configNode.deviceList[sid];
+                            if (onlyModels.length == 0 || onlyModels.indexOf(device.internalModel) >= 0) {
+                                var option = $('<option value="' + sid + '">' + device.name + '</option>');
+                                if(excludedSids && excludedSids.indexOf(sid) >= 0) {
                                     option.prop('selected', true);
                                 }
                                 $('#node-input-excludedSids').append(option);
@@ -79,11 +79,11 @@
     <div class="form-row">
         <label for="node-input-onlyModels"><i class="icon-tag"></i> Only</label>
         <select multiple id="node-input-onlyModels">
-            <option value="sensor_ht,weather.v1">Temperature/humidty</option>
-            <option value="motion">Motion</option>
-            <option value="switch,sensor_switch.aq2">Switches</option>
-            <option value="magnet,sensor_magnet.aq2">Contacts</option>
-            <option value="plug">Plugs</option>
+            <option value="mi.weather">Temperature/humidty</option>
+            <option value="mi.motion">Motion</option>
+            <option value="mi.switch">Switches</option>
+            <option value="mi.magnet">Magnets</option>
+            <option value="mi.plug">Plugs</option>
         </select>
     </div>
     <div class="form-row">
