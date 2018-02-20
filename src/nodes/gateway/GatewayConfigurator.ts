@@ -16,17 +16,24 @@ export interface IGatewayConfiguratorNode extends Node {
     on(event: "subdevice-update", listener: (subdevice: GatewaySubdevice) => void): any;
 }
 
+interface GatewayConfiguratorSubDevice {
+    name: string;
+    internalModel: string;
+}
+
 export default (RED: Red) => {
     class GatewayConfigurator {
         sid: string;
         key: string;
+        deviceList: { [sid: string]: GatewayConfiguratorSubDevice };
         _gateway: Gateway;
 
         constructor(props: NodeProperties) {
             RED.nodes.createNode(<any> this, props);
-            let {sid, key} = <any> props;
+            let {sid, key, deviceList} = <any> props;
             this.sid = sid;
             this.key = key;
+            this.deviceList = deviceList;
             let server = GatewayServer.getInstance();
             if (this.sid) {
                 this.setGateway();

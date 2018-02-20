@@ -12,11 +12,14 @@ export default (RED:Red, type:string) => {
             this.sid = (<any> props).sid;
     
             (<any> this).status({fill:"grey", shape:"ring", text:"battery - na"});
-    
+            this.setMessageListener();
+        }
+
+        protected setMessageListener() {
             if (this.gateway) {
                 (<any> this).on('input', (msg) => {
                     let payload = msg.payload;
-    
+
                     // Input from gateway
                     if (payload.sid) {
                         if (payload.sid == this.sid) {
@@ -25,7 +28,7 @@ export default (RED:Red, type:string) => {
                                 fill: "green", shape: "dot",
                                 text: "battery - " + batteryLevel + "%"
                             };
-                
+
                             if (batteryLevel < 10) {
                                 status.fill = "red";
                             } else if (batteryLevel < 45) {
