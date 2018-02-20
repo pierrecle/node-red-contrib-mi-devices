@@ -56,12 +56,15 @@ export default (RED: Red) => {
 
         protected setGateway() {
             this._gateway = GatewayServer.getInstance().getGateway(this.sid);
-            this._gateway && this._gateway.on("subdevice-values-updated", (sid: string) => {
-                let subdevice = this._gateway.getSubdevice(sid);
-                if (subdevice) {
-                    (<any> this).emit('subdevice-update', subdevice);
-                }
-            });
+            if (this._gateway) {
+                this._gateway.password = this.key;
+                this._gateway.on("subdevice-values-updated", (sid: string) => {
+                    let subdevice = this._gateway.getSubdevice(sid);
+                    if (subdevice) {
+                        (<any> this).emit('subdevice-update', subdevice);
+                    }
+                });
+            }
         }
 
         get gateway(): Gateway {

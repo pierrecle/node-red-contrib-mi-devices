@@ -9,17 +9,21 @@ import {Color} from "../utils/Color";
 export class Gateway extends events.EventEmitter {
     static iv: Buffer = Buffer.from([0x17, 0x99, 0x6d, 0x09, 0x3d, 0x28, 0xdd, 0xb3, 0xba, 0x69, 0x5a, 0x2e, 0x6f, 0x58, 0x56, 0x2e]);
     protected lastToken: string;
-    protected password: string;
+    protected _password: string;
     private _subdevices: { [sid: string]: GatewaySubdevice } = {};
 
     constructor(public sid: string, public ip: string) {
         super();
     }
 
-    get key(): string {
-        if (!this.lastToken || !this.password) return null;
+    set password(password: string) {
+        this._password = password;
+    }
 
-        var cipher = crypto.createCipheriv('aes-128-cbc', this.password, Gateway.iv);
+    get key(): string {
+        if (!this.lastToken || !this._password) return null;
+
+        var cipher = crypto.createCipheriv('aes-128-cbc', this._password, Gateway.iv);
         var key = cipher.update(Buffer.from(this.lastToken), "ascii", "hex");
         cipher.final('hex');
 
@@ -30,7 +34,6 @@ export class Gateway extends events.EventEmitter {
         if (msg.data) {
             if (msg.model === "gateway" && msg.sid === this.sid && msg.token) {
                 this.lastToken = msg.token;
-                this.setLight(100, {red: 255, green: 0, blue: 0});
             }
         }
 
