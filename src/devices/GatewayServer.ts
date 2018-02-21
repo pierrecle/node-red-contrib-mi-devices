@@ -67,7 +67,7 @@ export class GatewayServer extends events.EventEmitter {
             if ((msg.isHeartbeat() || msg.isIam()) && msg.model === "gateway") {
                 if (!this._gateways[msg.sid]) {
                     this._gateways[msg.sid] = new Gateway(msg.sid, remote.address);
-                    this.sendToGateway(msg.sid, {cmd: "get_id_list"});
+                    this._gateways[msg.sid].getIdList();
                     this.emit("gateway-online", msg.sid);
                 }
                 else {

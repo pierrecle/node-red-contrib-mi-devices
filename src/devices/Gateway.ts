@@ -39,7 +39,7 @@ export class Gateway extends events.EventEmitter {
 
         if (msg.isGetIdListAck()) {
             (<MessageData.GatewayMessageGetIdListData> msg.data).forEach((sid) => {
-                this.send({cmd: "read", sid: sid});
+                this.read(sid);
             });
         }
 
@@ -69,7 +69,17 @@ export class Gateway extends events.EventEmitter {
         return !!this._subdevices[sid];
     }
 
-    setLight(brightness, rgb) {
+    getIdList() {
+        this.send({
+            cmd: "get_id_list",
+        })
+    }
+
+    read(sid?: string) {
+        this.send({cmd: "read", sid: sid || this.sid});
+    }
+
+    setLight(brightness: number, rgb: { red: number, green: number, blue: number }) {
         this.send({
             cmd: "write",
             data: {
@@ -79,8 +89,15 @@ export class Gateway extends events.EventEmitter {
         });
     }
 
-    playSound() {
-
+    playSound(musicId: number, volume: number) {
+        this.send({
+            cmd: "write",
+            data: {
+                mid: musicId,
+                volume: volume,
+                sid: this.sid
+            }
+        });
     }
 
     send(message: any) {

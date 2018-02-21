@@ -1,6 +1,6 @@
 <!--  The Gateway light Node  -->
 <script type="text/javascript">
-    RED.nodes.registerType('<%= NODES_PREFIX %>-actions gateway_light', {
+    RED.nodes.registerType('<%= NODES_PREFIX %>-actions light', {
         category: 'xiaomi actions',
         color: '#64C4CD',
         defaults: {
@@ -30,7 +30,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="<%= NODES_PREFIX %>-actions gateway_light">
+<script type="text/x-red" data-template-name="<%= NODES_PREFIX %>-actions light">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -45,7 +45,7 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-actions gateway_light">
+<script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-actions light">
     <p>Change the light of the gateway.</p>
 
     <h3>Inputs</h3>
