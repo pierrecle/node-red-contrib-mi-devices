@@ -7,6 +7,7 @@ export interface GatewayMessageGetIdListData extends Array<string> {
 
 export interface GatewayMessageDefaultSubdeviceData {
     voltage: number;
+    timestamp: number;
 }
 
 export interface GatewayMessageReadAckMagnetData extends GatewayMessageDefaultSubdeviceData {
@@ -17,4 +18,10 @@ export interface GatewayMessageReadAckReportWeatherData extends GatewayMessageDe
     temperature?: string;
     humidity?: string;
     pressure?: string;
+}
+
+export interface GatewayMessageReadAckReportMotionData extends GatewayMessageDefaultSubdeviceData {
+    status?: string;
+    no_motion?: string;
+    lux?: string;
 }

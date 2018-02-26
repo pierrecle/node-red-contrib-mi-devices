@@ -48,8 +48,8 @@ export class Gateway extends events.EventEmitter {
                 for (let SubDeviceClass of [Magnet, Motion, Switch, Weather]) {
                     if (SubDeviceClass.acceptedModels.indexOf(msg.model) >= 0) {
                         this._subdevices[msg.sid] = new SubDeviceClass(msg.sid, msg.model);
-                        this._subdevices[msg.sid].on('values-updated', (sid: string) => {
-                            this.emit("subdevice-values-updated", sid);
+                        this._subdevices[msg.sid].on('values-updated', (sidOrMessage: string|any) => {
+                            this.emit("subdevice-values-updated", sidOrMessage);
                         });
                         this.emit("subdevice-found", msg.sid);
                     }

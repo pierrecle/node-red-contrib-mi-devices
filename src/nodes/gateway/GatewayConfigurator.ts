@@ -3,6 +3,7 @@ import {Constants} from "../constants";
 import {GatewayServer} from "../../devices/GatewayServer";
 import {Gateway} from "../../devices/Gateway";
 import {GatewaySubdevice} from "../../devices/GatewaySubdevice";
+import {isString} from "util";
 
 export interface IGatewayConfiguratorNode extends Node {
     ip: string;
@@ -58,9 +59,13 @@ export default (RED: Red) => {
             this._gateway = GatewayServer.getInstance().getGateway(this.sid);
             if (this._gateway) {
                 this._gateway.password = this.key;
-                this._gateway.on("subdevice-values-updated", (sid: string) => {
+                this._gateway.on("subdevice-values-updated", (sidOrMessage: string|any) => {
+                    let sid = sidOrMessage.sid || sidOrMessage;
                     let subdevice = this._gateway.getSubdevice(sid);
                     if (subdevice) {
+                        (sidOrMessage.data ? Object.keys(sidOrMessage.data) : []).forEach((key:string) => {
+                           subdevice[key] = sidOrMessage.data[key];
+                        });
                         (<any> this).emit('subdevice-update', subdevice);
                     }
                 });

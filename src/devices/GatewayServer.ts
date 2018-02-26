@@ -157,7 +157,6 @@ export class GatewayServer extends events.EventEmitter {
     }
 
     sendToGateway(sid: string, message: any) {
-        console.log(message);
         if (this.server && this._gateways[sid]) {
             let msg = Buffer.from(JSON.stringify(message));
             this.server.send(msg, 0, msg.length, GatewayServer.SERVER_PORT, this._gateways[sid].ip);
