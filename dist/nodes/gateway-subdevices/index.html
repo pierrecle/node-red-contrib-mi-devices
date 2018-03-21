@@ -1,0 +1,729 @@
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-all', {
+        category: 'xiaomi',
+        color: '#3FADB5',
+        defaults: {
+            gateway: {value:"", type:"mi-devices-gateway configurator"},
+            name: {value: ""},
+            onlyModels: {value: []},
+            excludedSids: { value: []}
+        },
+        inputs: 1,
+        outputs: 1,
+        outputLabels: ["All devices"],
+        paletteLabel: "all",
+        icon: "mi-all.png",
+        label: function () {
+            return this.name || "xiaomi-all";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            function getOnlyModelsValue(input) {
+                var cleanOnlyModels = [];
+                input.forEach(function(value) {
+                    cleanOnlyModels = cleanOnlyModels.concat(value.split(','));
+                });
+                return cleanOnlyModels;
+            }
+
+            function changeGateway(gateway, onlyModels, excludedSids) {
+                var configNodeID = gateway || $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        onlyModels = getOnlyModelsValue(onlyModels || $('#node-input-onlyModels').val() || []);
+                        excludedSids = excludedSids || $('#node-input-excludedSids').val() || [];
+                        $('#node-input-excludedSids').empty();
+                        for (sid in configNode.deviceList) {
+                            var device = configNode.deviceList[sid];
+                            if (onlyModels.length == 0 || onlyModels.indexOf(device.internalModel) >= 0) {
+                                var option = $('<option value="' + sid + '">' + device.name + '</option>');
+                                if(excludedSids && excludedSids.indexOf(sid) >= 0) {
+                                    option.prop('selected', true);
+                                }
+                                $('#node-input-excludedSids').append(option);
+                            }
+                        }
+                    }
+                }
+            }
+
+            changeGateway(this.gateway, this.onlyModels, this.excludedSids);
+            $("#node-input-gateway, #node-input-onlyModels").change(function () {
+                changeGateway();
+            });
+        },
+        oneditsave: function() {
+            if(!$('#node-input-onlyModels').val()) {
+                this.onlyModels = [];
+            }
+            if(!$('#node-input-excludedSids').val()) {
+                this.excludedSids = [];
+            }
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-all">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <hr />
+    <h5>Filters</h5>
+    <div class="form-row">
+        <label for="node-input-onlyModels"><i class="icon-tag"></i> Only</label>
+        <select multiple id="node-input-onlyModels">
+            <option value="mi.weather">Temperature/humidty</option>
+            <option value="mi.motion">Motion</option>
+            <option value="mi.switch">Switches</option>
+            <option value="mi.magnet">Magnets</option>
+            <option value="mi.plug">Plugs</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-excludedSids"><i class="icon-tag"></i> Exclude</label>
+        <select multiple id="node-input-excludedSids" size=10></select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-all">
+    <p>All devices registred in the gateway, except gateway itself.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>When use as an incoming filter node, <code>sid</code> and <code>model</code> are mandatory.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Devices output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">array</span></dt>
+                <dd>Array of devices.</dd>
+            </dl>
+        </li>
+    </ol>
+
+    <h4>Details</h4>
+    <p>Sample payload:</p>
+    <p><pre>[
+  {sid: "128d0901db1fa8", desc: "Door sensor" model: "magnet"},
+  {sid: "151d0401ab2491", desc: "Heat sensor", model: "sensor_ht"},
+  {sid: "658d030171427c", desc: "Button", model: "switch"}
+]</pre>
+</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-plug', {
+        category: 'xiaomi',
+        color: '#3FADB5',
+        defaults: {
+            gateway: {value:"", type:"mi-devices-gateway configurator"},
+            name: {value: ""},
+            sid: {value: "", required: true},
+            onmsg: {value: ""},
+            offmsg: {value: ""},
+            output: {value: "0"}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "plug (zigbee)",
+        icon: "outlet-icon.png",
+        label: function () {
+            return this.name || "xiaomi-plug";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            if(node.sid) {
+                $('#node-input-sid').val(node.sid);
+            }
+
+            function changeGateway(model) {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        $('#node-input-sid').empty();
+                        for (key in configNode.deviceList) {
+                            var device = configNode.deviceList[key];
+                            if (device.model === model) {
+                                $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
+                            }
+                        }
+                        if(node.sid) {
+                            $('#node-input-sid option[value="' + node.sid + '"]').prop('selected', true);
+                        }
+                    }
+                }
+            }
+
+            $("#node-input-sid").change(function () {
+                if(!this.name) {
+                    $("#node-input-name").val($('#node-input-sid option:selected').text());
+                }
+            });
+            $("#node-input-gateway").change(function () {
+                changeGateway("plug");
+            });
+        },
+        oneditsave: function() {
+            var node = this;
+            node.sid = $("#node-input-sid").val();
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-plug">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
+        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-plug">
+    <p>The Xiaomi plug (zigbee) node</p>
+
+    <p>This is the plug (socket) version which is attached to a Xiaomi gateway. The Wifi version is not yet supported.</p>
+    <p>To switch an output you need to specify the key of the gateway in the gateway configuration; without the key
+    no output can be switched. To retrieve the gateway key consult the Xiaomi Mi Home App.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string | json</span>
+        </dt>
+        <dd>When the node is used as filter, gateway <code>plug</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>. Or <code>on</code> or <code>off</code>.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Status output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">string | json</span></dt>
+                <dd>raw data, value or template.</dd>
+            </dl>
+        </li>
+        <li>Control output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">json</span></dt>
+                <dd>Gateway <code>write_cmd</code> to switch the output on or off.</dd>
+            </dl>
+        </li>
+    </ol>
+
+    <h4>Details</h4>
+    <p>The incoming json message is parsed if the type model is <code>plug</code> and
+     the <code>sid</code> matches the configured value for this device.</p>
+    <p>On the input you can send the string <code>on</code> to switch the plug on. To turn it off just send the string <code>off</code></p>
+    <p>Sample message:</p>
+    <p><pre>{
+  cmd: "write_ack"
+  model: "plug"
+  sid: "158d00012f1fb5"
+  short_id: 47414
+  data: {
+    voltage:3600,
+    status:"off",
+    inuse:"0",
+    power_consumed:"4000",
+    load_power:"0"
+  }
+}</pre></p>
+</script>
+
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-magnet', {
+        category: 'xiaomi',
+        color: '#3FADB5',
+        defaults: {
+            gateway: {value:"", type:"mi-devices-gateway configurator"},
+            name: {value: ""},
+            sid: {value: "", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "magnet",
+        icon: "door-icon.png",
+        label: function () {
+            return this.name || "mi-devices magnet";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            if(node.sid) {
+                $('#node-input-sid').val(node.sid);
+            }
+
+            function changeGateway(model) {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        $('#node-input-sid').empty();
+                        for (sid in configNode.deviceList) {
+                            var device = configNode.deviceList[sid];
+                            if (device.internalModel === model) {
+                                $('#node-input-sid').append('<option value="' + sid + '">' + device.name + ' - ' + sid + '</option>');
+                            }
+                        }
+                        if(node.sid) {
+                            $('#node-input-sid option[value="' + node.sid + '"]').prop('selected', true);
+                        }
+                    }
+                }
+            }
+
+            $("#node-input-sid").change(function () {
+                if(!this.name) {
+                    $("#node-input-name").val($('#node-input-sid option:selected').text());
+                }
+            });
+            $("#node-input-gateway").change(function () {
+                changeGateway("mi.magnet");
+            });
+        },
+        oneditsave: function() {
+            var node = this;
+            node.sid = $("#node-input-sid").val();
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-magnet">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
+        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-magnet">
+    <p>The Xiaomi contact sensor node</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>
+            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
+            <hr>
+            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway when used as a filter (see below).</dd>
+            <dt>sid <span class="property-type">string</span></dt>
+            <dd>Device SID.</dd>
+            <dt>gateway <span class="property-type">object</span></dt>
+            <dd>The <code>mi-devices-gateway configurator</code> object where the device is registred.</dd>
+        </dl>
+    </ol>
+
+    <h4>Details</h4>
+    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
+    <p>Sample payload after incoming incoming message:</p>
+    <p><pre>{
+  cmd: "read_ack"
+  model: "magnet"
+  sid: "158d000112fb5d"
+  short_id: 50301
+  data: {
+    voltage: 3015,
+    status: "close",
+    batteryLevel: 23
+  }
+}</pre>
+    Where &lt;code&gt;status&lt;/code&gt; can be &lt;code&gt;&#34;open&#34;&lt;/code&gt; or &lt;code&gt;&#34;close&#34;&lt;/code&gt;, <code>batteryLevel</code> is a computed percentage of remaining battery.
+    </p>
+</script>
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-mi.motion', {
+        category: 'xiaomi',
+        color: '#3FADB5',
+        defaults: {
+            gateway: {value:"", type:"mi-devices-gateway configurator"},
+            name: {value: ""},
+            sid: {value: "", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "motion",
+        icon: "motion-icon.png",
+        label: function () {
+            return this.name || "mi-devices mi.motion";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            if(node.sid) {
+                $('#node-input-sid').val(node.sid);
+            }
+
+            function changeGateway(model) {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        $('#node-input-sid').empty();
+                        for (sid in configNode.deviceList) {
+                            var device = configNode.deviceList[sid];
+                            if (device.internalModel === model) {
+                                $('#node-input-sid').append('<option value="' + sid + '">' + device.name + ' - ' + sid + '</option>');
+                            }
+                        }
+                        if(node.sid) {
+                            $('#node-input-sid option[value="' + node.sid + '"]').prop('selected', true);
+                        }
+                    }
+                }
+            }
+
+            $("#node-input-sid").change(function () {
+                if(!this.name) {
+                    $("#node-input-name").val($('#node-input-sid option:selected').text());
+                }
+            });
+            $("#node-input-gateway").change(function () {
+                changeGateway("mi.motion");
+            });
+        },
+        oneditsave: function() {
+            var node = this;
+            node.sid = $("#node-input-sid").val();
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-mi.motion">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
+        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-mi.motion">
+    <p>The Xiaomi body motion sensor node</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>
+            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
+            <hr>
+            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway when used as a filter (see below).</dd>
+            <dt>sid <span class="property-type">string</span></dt>
+            <dd>Device SID.</dd>
+            <dt>gateway <span class="property-type">object</span></dt>
+            <dd>The <code>mi-devices-gateway configurator</code> object where the device is registred.</dd>
+        </dl>
+    </ol>
+
+    <h4>Details</h4>
+    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
+    <p>Sample payload after incoming incoming message:</p>
+    <p><pre>{
+  cmd: "read_ack"
+  model: "motion"
+  sid: "158d00015ef56c"
+  short_id: 21672
+  data: {
+    voltage: 3035,
+    status: "motion",
+    batteryLevel: 45
+  }
+}</pre>
+    Where  <code>batteryLevel</code> is a computed percentage of remaining battery.
+    </p>
+</script>
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-mi.weather', {
+        category: 'xiaomi',
+        color: '#3FADB5',
+        defaults: {
+            gateway: {value:"", type:"mi-devices-gateway configurator"},
+            name: {value: ""},
+            sid: {value: "", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "weather",
+        icon: "thermometer-icon.png",
+        label: function () {
+            return this.name || "mi-devices mi.weather";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            if(node.sid) {
+                $('#node-input-sid').val(node.sid);
+            }
+
+            function changeGateway(model) {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        $('#node-input-sid').empty();
+                        for (sid in configNode.deviceList) {
+                            var device = configNode.deviceList[sid];
+                            if (device.internalModel === model) {
+                                $('#node-input-sid').append('<option value="' + sid + '">' + device.name + ' - ' + sid + '</option>');
+                            }
+                        }
+                        if(node.sid) {
+                            $('#node-input-sid option[value="' + node.sid + '"]').prop('selected', true);
+                        }
+                    }
+                }
+            }
+
+            $("#node-input-sid").change(function () {
+                if(!this.name) {
+                    $("#node-input-name").val($('#node-input-sid option:selected').text());
+                }
+            });
+            $("#node-input-gateway").change(function () {
+                changeGateway("mi.weather");
+            });
+        },
+        oneditsave: function() {
+            var node = this;
+            node.sid = $("#node-input-sid").val();
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-mi.weather">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
+        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-mi.weather">
+    <p>The Xiaomi Humidity &amp; Temperature sensor node</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>
+            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
+            <hr>
+            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway when used as a filter (see below).</dd>
+            <dt>sid <span class="property-type">string</span></dt>
+            <dd>Device SID.</dd>
+            <dt>gateway <span class="property-type">object</span></dt>
+            <dd>The <code>mi-devices-gateway configurator</code> object where the device is registred.</dd>
+        </dl>
+    </ol>
+
+    <h4>Details</h4>
+    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
+    <p>Sample payload after incoming incoming message:</p>
+    <p><pre>{
+  cmd: "read_ack"
+  model: "weather.v1"
+  sid: "158d00010b7f1b"
+  short_id: 8451
+  data: {
+    voltage:3005,
+    temperature:23.25,
+    humidity:56.99,
+    pressure:981.26,
+    batteryLevel: 34
+  }
+}</pre>
+    Where &lt;code&gt;humidy&lt;/code&gt; is in percents, &lt;code&gt;pressure&lt;/code&gt; in kPa, <code>batteryLevel</code> is a computed percentage of remaining battery.
+    </p>
+</script>
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-mi.switch', {
+        category: 'xiaomi',
+        color: '#3FADB5',
+        defaults: {
+            gateway: {value:"", type:"mi-devices-gateway configurator"},
+            name: {value: ""},
+            sid: {value: "", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "switch",
+        icon: "mi-switch.png",
+        label: function () {
+            return this.name || "mi-devices mi.switch";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            if(node.sid) {
+                $('#node-input-sid').val(node.sid);
+            }
+
+            function changeGateway(model) {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        $('#node-input-sid').empty();
+                        for (sid in configNode.deviceList) {
+                            var device = configNode.deviceList[sid];
+                            if (device.internalModel === model) {
+                                $('#node-input-sid').append('<option value="' + sid + '">' + device.name + ' - ' + sid + '</option>');
+                            }
+                        }
+                        if(node.sid) {
+                            $('#node-input-sid option[value="' + node.sid + '"]').prop('selected', true);
+                        }
+                    }
+                }
+            }
+
+            $("#node-input-sid").change(function () {
+                if(!this.name) {
+                    $("#node-input-name").val($('#node-input-sid option:selected').text());
+                }
+            });
+            $("#node-input-gateway").change(function () {
+                changeGateway("mi.switch");
+            });
+        },
+        oneditsave: function() {
+            var node = this;
+            node.sid = $("#node-input-sid").val();
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-mi.switch">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
+        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-mi.switch">
+    <p>The Xiaomi Switch sensor node</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>
+            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
+            <hr>
+            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway when used as a filter (see below).</dd>
+            <dt>sid <span class="property-type">string</span></dt>
+            <dd>Device SID.</dd>
+            <dt>gateway <span class="property-type">object</span></dt>
+            <dd>The <code>mi-devices-gateway configurator</code> object where the device is registred.</dd>
+        </dl>
+    </ol>
+
+    <h4>Details</h4>
+    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
+    <p>Sample payload after incoming incoming message:</p>
+    <p><pre>{
+  cmd: "report"
+  model: "switch"
+  sid: "158d000128b124"
+  short_id: 56773
+  data: {
+    status: "click",
+    batteryLevel: 23
+  }
+}</pre>
+    Where  <code>batteryLevel</code> is a computed percentage of remaining battery.
+    </p>
+</script>

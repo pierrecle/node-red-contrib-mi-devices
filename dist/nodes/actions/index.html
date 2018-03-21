@@ -1,0 +1,483 @@
+
+<script type="text/x-red" data-template-name="mi-devices-actions read">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions read">
+    <p>Ask the gateway to read the report of the input device.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>sid <span class="property-type">string</span></dt>
+        <dd>Device <code>sid</code> to ask the report.</dd>
+
+        <dt>gateway <span class="property-type">object</span></dt>
+        <dd>The <code>mi-devices-gateway configurator</code> object where the input device is registred.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p class="node-ports">Message to connect to a gateway out node.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions read',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "read",
+        icon: "mi-read.png",
+        label: function() {
+            return this.name||"mi-devices read";
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="mi-devices-actions get_id_list">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions get_id_list">
+    <p>Ask the gateway to the list of devices ids.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>sid <span class="property-type">string</span></dt>
+        <dd>Device <code>sid</code> to ask the report.</dd>
+
+        <dt>gateway <span class="property-type">object</span></dt>
+        <dd>The <code>mi-devices-gateway configurator</code> object where the input device is registred.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p class="node-ports">Message to connect to a gateway out node.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions get_id_list',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "get id list",
+        icon: "mi-list.png",
+        label: function() {
+            return this.name||"mi-devices get id list";
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="mi-devices-actions click">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions click">
+    <p>Virtual single click for switch.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>sid <span class="property-type">string</span></dt>
+        <dd>Device <code>sid</code> to ask the report.</dd>
+
+        <dt>gateway <span class="property-type">object</span></dt>
+        <dd>The <code>mi-devices-gateway configurator</code> object where the input device is registred.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p class="node-ports">Message to connect to a gateway out node.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions click',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "click",
+        icon: "mi-click.png",
+        label: function() {
+            return this.name||"mi-devices click";
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="mi-devices-actions double_click">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions double_click">
+    <p>Virtual double click for switch.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>sid <span class="property-type">string</span></dt>
+        <dd>Device <code>sid</code> to ask the report.</dd>
+
+        <dt>gateway <span class="property-type">object</span></dt>
+        <dd>The <code>mi-devices-gateway configurator</code> object where the input device is registred.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p class="node-ports">Message to connect to a gateway out node.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions double_click',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "double click",
+        icon: "double-click.png",
+        label: function() {
+            return this.name||"mi-devices double click";
+        }
+    });
+</script>
+
+<!--  The Gateway light Node  -->
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions light', {
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value: ""},
+            brightness: {value: 100},
+            hexRgbColor: {value: "#ffffff"},
+            color: {value:{red: 255, green: 255, blue: 255}}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "set light",
+        icon: "mi-bulb.png",
+        label: function () {
+            return this.name || "set light";
+        },
+        oneditsave: function() {
+            var hexRgbColor = $("#node-input-hexRgbColor").val();
+            var split = hexRgbColor.slice(1).match(/.{1,2}/g).map(function(hexColor) {
+                return parseInt(hexColor, 16);
+            });
+            this.color = {
+                red: split[0],
+                green: split[1],
+                blue: split[2]
+            };
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-actions light">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-brightness"><i class="icon-tag"></i> Brightness</label>
+        <input type="range" id="node-input-brightness" min="0" max="100">
+    </div>
+    <div class="form-row">
+        <label for="node-input-hexRgbColor"><i class="icon-tag"></i> Color</label>
+        <input type="color" id="node-input-hexRgbColor">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions light">
+    <p>Change the light of the gateway.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>brightness
+            <span class="property-type">number</span>
+        </dt>
+        <dd>The brightness value between <code>0</code> and <code>100</code>.</dd>
+        <dt>color
+            <span class="property-type">object</span>
+        </dt>
+        <dd>The color itself. This object must contain the followinf properties:
+            <ul>
+            <li>
+                <code>red</code> - amout of red, between <code>0</code> and <code>255</code>
+            </li>
+            <li>
+                <code>green</code> - amout of green, between <code>0</code> and <code>255</code>
+            </li>
+            <li>
+                <code>blue</code> - amout of blue, between <code>0</code> and <code>255</code>
+            </li>
+            </ul>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Message to connect to a gateway out node.</li>
+    </ol>
+</script>
+<!--  The Gateway sound Node  -->
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions gateway_play_sound', {
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value: ""},
+            mid: {value: ""},
+            volume: {value: ""}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "play sound",
+        icon: "mi-sound.png",
+        label: function () {
+            return this.name || "play sound";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-actions gateway_play_sound">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mid"><i class="icon-tag"></i> Sound</label>
+        <select id="node-input-mid">
+            <option value="0">Police car tone 1</option>
+            <option value="1">Police car tone 2</option>
+            <option value="2">Safety incident sound</option>
+            <option value="3">Missile countdown</option>
+            <option value="4">Ghost cry</option>
+            <option value="5">Sniper rifle</option>
+            <option value="6">Battle sound</option>
+            <option value="7">Air raid alarm</option>
+            <option value="8">Barking</option>
+            <option value="10">Doorbell tone</option>
+            <option value="11">Door knocking tone</option>
+            <option value="12">Funny tone</option>
+            <option value="13">Alarm clock tone</option>
+            <option value="20">MiMix</option>
+            <option value="21">Enthusisatic</option>
+            <option value="22">GuitarClassic</option>
+            <option value="23">IceWorldPiano</option>
+            <option value="24">LeisureTime</option>
+            <option value="25">ChildHood</option>
+            <option value="26">MorningStreamLet</option>
+            <option value="27">MusicBox</option>
+            <option value="28">Orange</option>
+            <option value="29">Thinker</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-volume"><i class="icon-tag"></i> Volume</label>
+        <input type="range" id="node-input-volume" min="0" max="100">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions gateway_play_sound">
+    <p>Play a sound on the gateway.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>mid
+            <span class="property-type">number</span>
+        </dt>
+        <dd>Music ID (user define sounds start from <code>1001</code>, <code>1000</code> means stop).</dd>
+        <dt>volume
+            <span class="property-type">number</span>
+        </dt>
+        <dd>Playing volume, between <code>0</code> and <code>100</code>.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Message to connect to a gateway out node.</li>
+    </ol>
+
+</script>
+<!--  The Gateway stop sound Node  -->
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions gateway_stop_sound', {
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value: ""}
+        },
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: "stop sound",
+        icon: "mi-mute.png",
+        label: function () {
+            return this.name || "stop sound";
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="mi-devices-actions gateway_stop_sound">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions gateway_stop_sound">
+    <p>
+        Stop current playing sound on the gateway.
+    </p>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Message to connect to a gateway out node.</li>
+    </ol>
+
+</script>
+
+
+<script type="text/x-red" data-template-name="mi-devices-actions turn_on">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions turn_on">
+    <p>Turn device on.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>sid <span class="property-type">string</span></dt>
+        <dd>Device <code>sid</code> to ask the report.</dd>
+
+        <dt>gateway <span class="property-type">object</span></dt>
+        <dd>The <code>mi-devices-gateway configurator</code> object where the input device is registred.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p class="node-ports">Message to connect to a gateway out node.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions turn_on',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "turn on",
+        icon: "mi-on.png",
+        label: function() {
+            return this.name||"mi-devices turn on";
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="mi-devices-actions turn_off">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions turn_off">
+    <p>Turn device off.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>sid <span class="property-type">string</span></dt>
+        <dd>Device <code>sid</code> to ask the report.</dd>
+
+        <dt>gateway <span class="property-type">object</span></dt>
+        <dd>The <code>mi-devices-gateway configurator</code> object where the input device is registred.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p class="node-ports">Message to connect to a gateway out node.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions turn_off',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "turn off",
+        icon: "mi-off.png",
+        label: function() {
+            return this.name||"mi-devices turn off";
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="mi-devices-actions toggle">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-actions toggle">
+    <p>Toggle device.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>sid <span class="property-type">string</span></dt>
+        <dd>Device <code>sid</code> to ask the report.</dd>
+
+        <dt>gateway <span class="property-type">object</span></dt>
+        <dd>The <code>mi-devices-gateway configurator</code> object where the input device is registred.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p class="node-ports">Message to connect to a gateway out node.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-actions toggle',{
+        category: 'xiaomi actions',
+        color: '#64C4CD',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        paletteLabel: "toggle",
+        icon: "mi-toggle.png",
+        label: function() {
+            return this.name||"mi-devices toggle";
+        }
+    });
+</script>

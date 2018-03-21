@@ -1,0 +1,160 @@
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-yeelight configurator', {
+        category: 'config',
+        defaults: {
+            name: {value: ""},
+            sid: {value: ""}
+        },
+        label: function () {
+            return this.name || "yeelight conf";
+        },
+        oneditprepare: function() {
+            var foundBulbs = RED.settings.miDevicesYeelightConfiguratorDiscoveredBulbs;
+            Object.keys(foundBulbs).forEach(function(sid) {
+                var bulb = foundBulbs[sid];
+                $('#discovered-bulbs').append('<option value="' + bulb.sid + '">' + (bulb.name || bulb.sid) + ' - ' + bulb.model + ' - ' + bulb.ip + '</option>');
+            });
+            $('#discovered-bulbs').on('change', function() {
+                var sid = $('#discovered-bulbs').val();
+                var bulb = foundBulbs[sid];
+                $("#node-config-input-name").val(bulb && bulb.name);
+                $("#node-config-input-sid").val(bulb && bulb.sid);
+            });
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-yeelight configurator">
+    <div class="form-row">
+        <label for="discovered-bulbs"><i class="fa fa-search"></i> Found bulbs</label>
+        <select id="discovered-bulbs">
+            <option>- Select -</option>
+        </select>
+    </div>
+    <hr>
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-sid"><i class="fa fa-barcode"></i> SID</label>
+        <input type="text" id="node-config-input-sid" placeholder="sid">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-yeelight configurator">
+    <p>Xiaomi Yeelight configuration node.</p>
+    <h3>Details</h3>
+    <p>This configuration node is used by the Yeelight nodes. Here you can add
+    devices with their device-id (SID), type and a description.</p>
+    <p>At the moment the following devices are supported:
+    <lu>
+        <li>Humidity & Temperature sensor [sensor ht/]</li>
+        <li>Body motion sensor [motion]</li>
+        <li>Magnet contact sensor [contact]</li>
+        <li>Wall socket plug (zigbee) [plug]</li>
+        <li>Push button [switch]</li>
+    </lu>
+    </p>
+    <p>To be able to receive messages from the Xiaomi gateway, you need to set the gateway
+    in developer mode. Once in developer mode, the gateway sends JSON messages over the network as
+    UDP packages. On the internet their are a lot of guides on how to put the gateway in developer mode.</p>
+    <p>If you want to use the wall sockets, you need to set the key from the gateway. The key can be
+    retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
+    together with the token from the gateway's heartbeat message to recalculate the key to switch
+    the plug. If you do not specify a key, the plug-node can not be used.</p>
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mi-devices-yeelight out', {
+        category: 'xiaomi in out',
+        color: '#087F8A',
+        defaults: {
+            name: {value: ""},
+            yeelight: {value:"", type:"mi-devices-yeelight configurator"}
+        },
+        inputs: 1,
+        outputs: 0,
+        paletteLabel: "yeelight out",
+        icon: "mi-yeelight.png",
+        align: "right",
+        label: function () {
+            return this.name || "yeelight out";
+        },
+        oneditprepare: function() {
+            function changeGateway() {
+                var configNodeID = $('#node-input-gateway').val();
+                if (configNodeID) {
+                    var configNode = RED.nodes.node(configNodeID);
+                    if(configNode) {
+                        if(!this.name) {
+                            $("#node-input-name").val(configNode.name);
+                        }
+                        $('#node-input-ip').val(configNode.ip);
+                    }
+                }
+            }
+
+            $("#node-input-gateway").change(function () {
+                changeGateway();
+            });
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mi-devices-yeelight out">
+    <div class="form-row">
+        <label for="node-input-yeelight"><i class="fa fa-wrench"></i> Yeelight</label>
+        <input type="text" id="node-input-yeelight" placeholder="yeelight">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mi-devices-yeelight out">
+    <p>The Xiaomi Yeelight node</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>
+            When the message contains a <code>sid</code> field, the node will filter the input and output only if the <code>sid</code> is the device's sid.<br>
+            <hr>
+            If the message doesn't contain a <code>sid</code> field, the node will be used to inject <code>sid</code> and <code>gateway</code> fields in the incoming <code>msg</code>.<br>
+            <hr>
+            Input Gateway node produces message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code>.
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">object</span></dt>
+            <dd>Data from gateway when used as a filter (see below).</dd>
+            <dt>sid <span class="property-type">string</span></dt>
+            <dd>Device SID.</dd>
+            <dt>gateway <span class="property-type">object</span></dt>
+            <dd>The <code>xiaomi-configurator</code> object where the device is registred.</dd>
+        </dl>
+    </ol>
+
+    <h4>Details</h4>
+    <p>The incoming message is processed if the input <code>sid</code> matches the configured value for this device.</p>
+    <p>Sample message:</p>
+    <p><pre>{
+  cmd: "report"
+  model: "switch"
+  sid: "158d000128b124"
+  short_id: 56773
+  data: {
+    status: "click",
+    batteryLevel: 23
+  }
+}</pre></p>
+
+</script>

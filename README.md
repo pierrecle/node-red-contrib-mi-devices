@@ -12,8 +12,6 @@ The following devices are currently supported:
 * Aqara smart wireless switch
 * Motion sensor
 * Aqara Motion sensor
-* Power plug (zigbee)
-* Power plug (wifi)
 * Yeelight White (mono)
 * Yeelight RGB (color)
 
