@@ -1,6 +1,6 @@
 import * as events from 'events';
 import * as dgram from "dgram";
-import {Gateway} from "./Gateway";
+import {Gateway} from "./";
 import Timer = NodeJS.Timer;
 import {GatewayMessage} from "./GatewayMessage";
 
@@ -92,36 +92,6 @@ export class GatewayServer extends events.EventEmitter {
             }
 
             gatewaySid && this._gateways[gatewaySid] && this._gateways[gatewaySid].handleMessage(msg);
-
-            /*if(remote.address == this.addr) {
-                var msg = message.toString('utf8');
-                var jsonMsg = JSON.parse(msg);
-                if(jsonMsg.data) {
-                    jsonMsg.data = JSON.parse(jsonMsg.data) || jsonMsg.data;
-                    if(jsonMsg.data.voltage) {
-                        jsonMsg.data.batteryLevel = miDevicesUtils.computeBatteryLevel(jsonMsg.data.voltage);
-                    }
-                }
-                msg = { payload: jsonMsg };
-                if(this.gateway && jsonMsg.data.ip && jsonMsg.data.ip === this.gateway.ip) {
-                    if(jsonMsg.token) {
-                        this.gateway.lastToken = jsonMsg.token;
-                        if(!this.gateway.sid) {
-                            this.gateway.sid = jsonMsg.sid;
-                        }
-                    }
-                    RED.nodes.eachNode((tmpNode) => {
-                        if(tmpNode.type.indexOf("xiaomi-gateway") === 0 && tmpNode.gateway == this.gatewayNodeId) {
-                            let tmpNodeInst = RED.nodes.getNode(tmpNode.id);
-                            if(tmpNode.type === "xiaomi-gateway out" && !this.gateway.lastToken) {
-                                tmpNodeInst.status({fill:"yellow", shape:"ring", text: "waiting input"});
-                            }
-                            tmpNodeInst.status({fill:"blue", shape:"dot", text: "online"});
-                        }
-                    });
-                }
-                this.send(msg);
-            }*/
         });
 
         return new Promise((resolve, reject) => {

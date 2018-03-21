@@ -1,6 +1,6 @@
 import {Red, Node, NodeProperties} from 'node-red';
 import {Constants} from '../constants';
-import {Gateway} from "../../devices/Gateway";
+import {Gateway} from "../../devices/gateway/Gateway";
 
 export interface IGatewayInNode extends Node {
     gatewayConf: any;

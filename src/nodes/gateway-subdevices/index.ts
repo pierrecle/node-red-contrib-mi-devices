@@ -1,5 +1,4 @@
-import { Red, NodeProperties } from "node-red";
-import * as LumiAqara from 'lumi-aqara';
+import { Red } from "node-red";
 
 import {default as All} from "./All";
 import {default as Plug} from "./Plug";

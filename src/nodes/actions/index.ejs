@@ -33,3 +33,27 @@
 <%- include('./Light', {}) %>
 <%- include('./GatewayPlaySound', {}) %>
 <%- include('./GatewayStopSound', {}) %>
+
+<%# ---------------------------------- turn_on ----------------------------------  %>
+<%- include('./Action', {
+type: "turn_on",
+label: "turn on",
+icon: "mi-on",
+docTitle: "Turn device on."
+}) %>
+
+<%# ---------------------------------- double_click ----------------------------------  %>
+<%- include('./Action', {
+type: "turn_off",
+label: "turn off",
+icon: "mi-off",
+docTitle: "Turn device off."
+}) %>
+
+<%# ---------------------------------- double_click ----------------------------------  %>
+<%- include('./Action', {
+type: "toggle",
+label: "toggle",
+icon: "mi-toggle",
+docTitle: "Toggle device."
+}) %>

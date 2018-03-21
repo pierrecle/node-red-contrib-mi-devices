@@ -3,23 +3,22 @@
         category: 'config',
         defaults: {
             name: {value: ""},
-            ip: {value: ""},
             sid: {value: ""}
         },
         label: function () {
             return this.name || "yeelight conf";
         },
         oneditprepare: function() {
-            RED.settings.miDevicesYeelightConfiguratorDiscoveredBulbs.forEach(function(bulb, index) {
+            var foundBulbs = RED.settings.miDevicesYeelightConfiguratorDiscoveredBulbs;
+            Object.keys(foundBulbs).forEach(function(sid) {
+                var bulb = foundBulbs[sid];
                 $('#discovered-bulbs').append('<option value="' + bulb.sid + '">' + (bulb.name || bulb.sid) + ' - ' + bulb.model + ' - ' + bulb.ip + '</option>');
             });
-            var node = this;
             $('#discovered-bulbs').on('change', function() {
                 var sid = $('#discovered-bulbs').val();
-                var bulb = sid && RED.settings.miDevicesYeelightConfiguratorDiscoveredBulbs.filter(function(e) { return e.sid == sid })[0];
+                var bulb = foundBulbs[sid];
                 $("#node-config-input-name").val(bulb && bulb.name);
                 $("#node-config-input-sid").val(bulb && bulb.sid);
-                $("#node-config-input-ip").val("");
             });
         }
     });
@@ -38,14 +37,9 @@
         <input type="text" id="node-config-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-config-input-ip"><i class="fa fa-compass"></i> IP</label>
-        <input type="text" id="node-config-input-ip" placeholder="IP">
-    </div>
-    <div class="form-row">
         <label for="node-config-input-sid"><i class="fa fa-barcode"></i> SID</label>
         <input type="text" id="node-config-input-sid" placeholder="sid">
     </div>
-    <p>Note: use <code>ip</code> or <code>sid</code> - <code>sid</code> is better.</p>
 </script>
 
 <script type="text/x-red" data-help-name="<%= NODES_PREFIX %>-yeelight configurator">

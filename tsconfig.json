@@ -5,7 +5,8 @@
         "inlineSourceMap": false,
         "outDir": "dist/",
         "rootDir": "./src",
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "noImplicitAny": false
     },
     "include": [
         "src/**/*.ts",

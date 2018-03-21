@@ -1,5 +1,4 @@
 import { Red, Node, NodeProperties } from "node-red";
-import { LumiAqara } from "../../../typings/index";
 import { Constants } from "../constants";
 
 export interface IGatewayNode extends Node {

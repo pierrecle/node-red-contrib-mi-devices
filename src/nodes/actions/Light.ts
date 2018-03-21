@@ -15,13 +15,11 @@ export default (RED: Red) => {
 
         protected setListeners() {
             (<any> this).on('input', (msg) => {
-                if (msg.sid) {
-                    msg.payload = {
-                        action: "setLight",
-                        color: msg.color || this.color,
-                        brightness: msg.brightness || this.brightness
-                    };
-                }
+                msg.payload = {
+                    action: "setLight",
+                    color: msg.color || this.color,
+                    brightness: msg.brightness || this.brightness
+                };
                 (<any> this).send(msg);
             });
         }

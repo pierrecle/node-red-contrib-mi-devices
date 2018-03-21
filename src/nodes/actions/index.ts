@@ -5,6 +5,7 @@ import {default as WriteAction} from './WriteAction';
 import {default as Light} from './Light';
 import {default as GatewayPlaySound} from './GatewayPlaySound';
 import {default as GatewayStopSound} from './GatewayStopSound';
+import {default as ToggleAction} from './ToggleAction';
 
 export = (RED: Red) => {
     ["read", "get_id_list"].forEach((action) => {
@@ -17,4 +18,7 @@ export = (RED: Red) => {
     Light(RED);
     GatewayPlaySound(RED);
     GatewayStopSound(RED);
+    ["turn_on", "turn_off", "toggle"].forEach(action => {
+        ToggleAction(RED, action);
+    });
 };

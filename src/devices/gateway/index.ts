@@ -1,3 +1,4 @@
+export * from './';
 export * from './Gateway';
 export * from './GatewayMessage';
 export * from './GatewayServer';

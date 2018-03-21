@@ -1,6 +1,6 @@
 import {Red, NodeProperties} from "node-red";
 import {Constants} from "../constants";
-import {GatewayServer} from "../../devices/GatewayServer";
+import {GatewayServer} from "../../devices/gateway/GatewayServer";
 
 export default (RED: Red) => {
     class GatewayOut {

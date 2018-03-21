@@ -1,12 +1,11 @@
-import { Red, NodeProperties } from "node-red";
-import * as YeelightSearch from 'yeelight-wifi';
+import { Red } from "node-red";
 
-import { Searcher } from "./Searcher";
+import { YeelightServer } from "../../devices/yeelight/YeelightServer";
 import {default as YeelightConfigurator} from "./YeelightConfigurator";
 import {default as YeelightOut} from "./YeelightOut";
 
 export = (RED:Red) => {
-    Searcher.discover(RED);
+    YeelightServer.getInstance().discover();
 
     YeelightConfigurator(RED);
     YeelightOut(RED);

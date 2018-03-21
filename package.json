@@ -46,8 +46,7 @@
   },
   "dependencies": {
     "cryptojs": "^2.5.3",
-    "lumi-aqara": "^1.4.0",
-    "miio": "^0.15.2",
+    "miio": "^0.15.4",
     "yeelight-wifi": "^2.3.0"
   },
   "engines": {

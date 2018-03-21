@@ -1,8 +1,8 @@
 import {Red, Node, NodeProperties} from "node-red";
 import {Constants} from "../constants";
-import {GatewayServer} from "../../devices/GatewayServer";
-import {Gateway} from "../../devices/Gateway";
-import {GatewaySubdevice} from "../../devices/GatewaySubdevice";
+import {GatewayServer} from "../../devices/gateway/GatewayServer";
+import {Gateway} from "../../devices/gateway/Gateway";
+import {GatewaySubdevice} from "../../devices/gateway/GatewaySubdevice";
 import {isString} from "util";
 
 export interface IGatewayConfiguratorNode extends Node {
