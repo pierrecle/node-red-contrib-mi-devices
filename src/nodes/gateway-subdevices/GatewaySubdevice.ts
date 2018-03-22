@@ -48,6 +48,5 @@ export default (RED:Red, type:string) => {
             }
         }
     }
-    
-    RED.nodes.registerType(`${Constants.NODES_PREFIX}-${type}`, <any> GatewayDevice);
+    RED.nodes.registerType(`${Constants.NODES_PREFIX}-mi.${type}`, <any> GatewayDevice);
 };

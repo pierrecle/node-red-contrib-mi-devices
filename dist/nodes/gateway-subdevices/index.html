@@ -253,7 +253,7 @@
 
 
 <script type="text/javascript">
-    RED.nodes.registerType('mi-devices-magnet', {
+    RED.nodes.registerType('mi-devices-mi.magnet', {
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
@@ -266,7 +266,7 @@
         paletteLabel: "magnet",
         icon: "door-icon.png",
         label: function () {
-            return this.name || "mi-devices magnet";
+            return this.name || "mi-devices mi.magnet";
         },
         oneditprepare: function() {
             var node = this;
@@ -310,7 +310,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="mi-devices-magnet">
+<script type="text/x-red" data-template-name="mi-devices-mi.magnet">
     <div class="form-row">
         <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
         <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
@@ -325,7 +325,7 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="mi-devices-magnet">
+<script type="text/x-red" data-help-name="mi-devices-mi.magnet">
     <p>The Xiaomi contact sensor node</p>
 
     <h3>Inputs</h3>

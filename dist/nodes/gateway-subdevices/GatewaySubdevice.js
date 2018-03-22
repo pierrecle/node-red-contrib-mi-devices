@@ -41,5 +41,5 @@ exports.default = (RED, type) => {
             }
         }
     }
-    RED.nodes.registerType(`${constants_1.Constants.NODES_PREFIX}-${type}`, GatewayDevice);
+    RED.nodes.registerType(`${constants_1.Constants.NODES_PREFIX}-mi.${type}`, GatewayDevice);
 };
