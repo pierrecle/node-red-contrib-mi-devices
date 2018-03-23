@@ -29,7 +29,8 @@ export class Magnet extends GatewaySubdevice {
         super.handleMessage(msg);
         if (msg.isReadAck() || msg.isReport()) {
             let data = <GatewayMessageReadAckMagnetData> msg.data;
-            // mintime
+
+            // TODO: mintime
             if (this.status !== data.status) {
                 this.status = data.status;
                 this.emit('values-updated', this.sid);

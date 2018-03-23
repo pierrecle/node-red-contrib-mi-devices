@@ -47,6 +47,7 @@
   "dependencies": {
     "cryptojs": "^2.5.3",
     "miio": "^0.15.4",
+    "uniqid": "^4.1.1",
     "yeelight-wifi": "^2.3.0"
   },
   "engines": {
