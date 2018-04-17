@@ -1,5 +1,7 @@
 # node-red-contrib-mi-devices
 
+__:warning: I will not go further because I don't use node-red anymore and I don't have the time, but feel free to fork, PR & so on. If you want to maintain this module, feel free to ask.__
+
 This module contains the following nodes to provide easy integration of the Xiaomi devices into node-red.
 This module is a fork of [Harald Rietman module, node-red-contrib-xiaomi-devices](https://github.com/hrietman/node-red-contrib-xiaomi-devices)
 
