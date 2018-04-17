@@ -13,9 +13,9 @@ module.exports = (RED) => {
                 var payload = msg.payload;
                 if(payload.sid) {
                     if (payload.sid == this.sid) {
-                        if (data.status && data.status == "on") {
+                        if (payload.data && payload.data.status && payload.data.status == "on") {
                             this.status({fill:"green", shape:"dot", text:"on"});
-                        } else if (data.status && data.status == "off") {
+                        } else if (payload.data && payload.data.status && payload.data.status == "off") {
                             this.status({fill:"red", shape:"dot", text:"off"});
                         }
                         this.send(msg);
