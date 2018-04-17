@@ -53,6 +53,18 @@ Here an example of how to use the different nodes (screenshot of [importable flo
 Here are different flow (screenshot of [importable flows-sample.json](flows-sample.json?raw=true "Different flows using Mi Devices")):
 ![Mi devices example in node-red](resources/mi-devices-sample.png?raw=true "Mi devices flow sample")
 
+### Interpreting payload.msg
+
+The following is an (incomplete) summary of interpreting payload.msg output from the mi-devices nodes
+#### payload.msg.cmd
+When utilising a gateway, device and debug node, you will see the following property of msg.payload.cmd along with a number of possible values:
+* cmd: 'read' - this is the result generated from a flow that utilises the 'read' node. (see 'outgoing' example above. The result of the 'xiaomi-ht' device connected to the 'read' node, will be output from the xiaomi-gateway incoming node, with a property of 'cmd' and value 'read'). Using a read node is the best way to obtain up to date values.
+* cmd: 'report' - is a result of a direct change in status of a device, for example the opening or closing of a magnet sensor, or a change in temperature.
+* cmd: 'heartbeat' - If the device is the gateway, then a heartbeat cmd will be sent every 10 seconds. If it is a sub-device, then plug-in devices (such as sockets and aircon helpers) will send a heartbeat every 10 minutes, other devices that sleep (e.g. zigbee devices), will send a heartbeat message every 60 minutes. If a device's current status is lost, a heartbeat message may be used to remedy the issue.
+* cmd 'write' - used to change the state of a Smart Socket
+
+
+
 ## Enable LAN mode
 
 ### Gateway
