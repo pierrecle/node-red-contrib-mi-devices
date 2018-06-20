@@ -73,7 +73,11 @@ module.exports = (RED) => {
             let color = msg.color || this.color;
             let brightness = msg.brightness || this.brightness;
             if(msg.sid) {
-                let rgb = miDevicesUtils.computeColorValue(color.red, color.green, color.blue, brightness);
+                if(color.red==0 && color.green==0 && color.blue==0) {
+                    let rgb = 0; # Turn off
+                } else {
+                    let rgb = miDevicesUtils.computeColorValue(color.red, color.green, color.blue, brightness);
+                }    
                 msg.payload = {
                     cmd: "write",
                     data: { rgb: rgb, sid: msg.sid }
